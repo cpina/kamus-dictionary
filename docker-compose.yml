@@ -1,0 +1,46 @@
+version: "2"
+
+services:
+  kamus:
+    image: kamus-dictionary
+    build:
+      dockerfile: Dockerfile
+      context: kamus/
+    environment:
+      - DEBUG=0
+      - SECRET_KEY=${KAMUS_SECRET_KEY}
+        # TODO: move it outside docker-compose.yml
+      - PYWIKIBOT_NO_USER_CONFIG=1
+      - PYWIKIBOT_DIR=/tmp
+    volumes:
+      - static_volume:/code/kamus/staticfiles
+      - ./kamus:/code/kamus
+    networks:
+      - nginx-proxy
+    restart: unless-stopped
+
+  reverse-proxy:
+    image: nginx:1.23
+    expose:
+      - "80"
+    environment:
+      - NGINX_PORT=80
+      - VIRTUAL_HOST=${KAMUS_HOST}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+      - LETSENCRYPT_HOST=${KAMUS_HOST}
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/code/kamus/staticfiles
+    links:
+      - kamus
+    networks:
+      - nginx-proxy
+    restart: unless-stopped
+
+volumes:
+  static_volume: {}
+
+networks:
+  nginx-proxy:
+    external:
+      name: nginx-proxy

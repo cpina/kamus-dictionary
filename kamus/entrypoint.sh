@@ -4,11 +4,11 @@
 
 set -eu
 
-python3 manage.py check --deploy --fail-level WARNING
+# python3 manage.py check --deploy --fail-level WARNING
 python3 manage.py collectstatic --no-input --clear
 
 gunicorn kamus.wsgi:application \
-	--bind 0.0.0.0:8081 \
+	--bind 0.0.0.0:80 \
 	--workers=10 \
 	--timeout=600 \
 	--log-file=- \
