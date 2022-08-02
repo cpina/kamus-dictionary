@@ -1,1 +1,20 @@
-Hello world
+{% extends "kamus/_base.html" %}
+
+{% block title %}Kamus Dictionary - an easier way to use Wiktionary translations{% endblock %}
+
+{% block contents %}
+    <h1>Kamus dictionary</h1>
+    <p>
+        Prototype of a tool to use the translations from Wiktionary in an easy and convenient way.
+    </p>
+    <p>
+        Today is translating from English to Catalan.
+    </p>
+    <form action="translate/" method="get">
+        <p>
+            <label for="word">English word:</label> <input type="text" id="word" name="word">
+        </p>
+        <input type="submit" value="Search">
+    </form>
+    <p>
+{% endblock %}
