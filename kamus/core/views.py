@@ -1,7 +1,6 @@
-from django.shortcuts import render
-
 from django.views.generic import TemplateView
 
+from wikidictionary.search import search
 
 class Homepage(TemplateView):
     template_name = "kamus/homepage.html"
@@ -18,5 +17,6 @@ class Translate(TemplateView):
 
         context = {}
         context["word"] = word
+        context["translations"] = search(word)
 
         return context
