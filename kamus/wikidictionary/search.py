@@ -1,13 +1,12 @@
 import pywikibot
 import re
 
-def search(word):
-    site = pywikibot.Site("en", "wiktionary")
+from wikidictionary import LANGUAGES
+
+
+def search(source, to, word):
+    site = pywikibot.Site(source, "wiktionary")
     page = pywikibot.Page(site, word)
-
-    translations = ""
-
-    current_position = 0
 
     translations = []
 
@@ -24,11 +23,11 @@ def search(word):
             end_position = translations[index+1]["end"]
 
         sub_page = page.text[translation_information["start"]:end_position]
-        translated = re.search("Catalan: (.+)", sub_page)
+
+        translated = re.search(r"\{\{tt?\+?\|"+to+r"\|(.+)}}", sub_page)
 
         if translated is not None:
             translated_word = translated.group(1)
-            translated_word = translated_word.split("|")[2]
             result += f"* {translation_information['meaning']}: {translated_word}\n\n"
 
     return result

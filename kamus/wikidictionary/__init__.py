@@ -7,7 +7,7 @@ LANGUAGES = {
     "de": "Deutsch",
     "et": "Eesti",
     "el": "Ελληνικά",
-    "en": "Englis",
+    "en": "English",
     "es": "Español",
     "eo": "Esperanto",
     "fa": "فارسی",
@@ -45,3 +45,10 @@ LANGUAGES = {
     "vi": "Tiếng Việt",
     "zh": "中文<",
 }
+
+LANGUAGES_LIST = []
+
+for short, long in LANGUAGES.items():
+    LANGUAGES_LIST.append((short, long))
+
+print()
