@@ -1,3 +1,5 @@
+
+# LANGUAGES taken from https://wiktionary.org HTML code
 LANGUAGES = {
     "cs": "Čeština",
     "ca": "Català",
