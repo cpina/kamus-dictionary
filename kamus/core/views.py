@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
 
 from core.forms import SearchForm
-from wikidictionary.search import search
+from wiktionary.search import search
 
 def get_languages_config(session):
     return {"from": session.get("from", "en"),

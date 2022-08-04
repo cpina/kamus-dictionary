@@ -5,7 +5,21 @@
 
 {% block contents %}
     <h1>{{ word }}</h1>
-    <pre>{{ translations|default:"No translations found" }}</pre>
+
+    {% for sense in translations.senses %}
+        {{ sense.sense }}
+        <ul>
+            {% for translation in sense.translations %}
+                <li>{{ translation }}</li>
+            {% empty %}
+                <li><i>No translation available for this sense</i></li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+
+    <p>
+        Information from: <a href="{{ translations.source }}">{{ translations.source }}</a>
+    </p>
     <hr>
     {% crispy search %}
 {% endblock %}
