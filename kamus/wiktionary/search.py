@@ -1,6 +1,7 @@
 import pywikibot
 import re
 
+
 def expand_gender_plural(word):
     m = re.search(r"(?P<word>.+?)\|(?P<gender>[mf])-?(?P<number>[ps])?", word)
 
@@ -17,6 +18,7 @@ def expand_gender_plural(word):
 
     return translation
 
+
 def translation_text_to_dictionary(translation_text):
     """
     From hola|m returns {"translation": "hola", "gender": "m"}
@@ -31,7 +33,6 @@ def translation_text_to_dictionary(translation_text):
     else:
         translation = {**expand_gender_plural(translation_text)}
 
-
     return translation
 
 
@@ -45,11 +46,8 @@ def get_translation(language_code, text):
 
         result.append(translation_text_to_dictionary(translation_text))
 
-        # translation_text could be like: "hola|alt=hola?"
-        # if it has "alt=..." we remove it and add it as
-        # alternative
-
     return result
+
 
 def search(source, to, word):
     site = pywikibot.Site(source, "wiktionary")
@@ -68,7 +66,8 @@ def search(source, to, word):
             # TODO: log, Wiktionary page broken
             continue
 
-        result["senses"].append({"sense": trans_top.group(1), "startpos": trans_top.start(), "endpos": trans_top.start() + trans_bottom.end()})
+        result["senses"].append({"sense": trans_top.group(1), "startpos": trans_top.start(),
+                                 "endpos": trans_top.start() + trans_bottom.end()})
 
     for sense in result["senses"]:
         translations_section = page.text[sense["startpos"]:sense["endpos"]]
@@ -76,7 +75,7 @@ def search(source, to, word):
         if (translations := get_translation(to, translations_section)) is not None:
             sense["translations"] = translations
 
-    return result
+    # sorts the translations to have the ones without a translation at the bottom
+    result["senses"].sort(key=lambda t: len(t["translations"]) == 0)
 
-if __name__ == "__main__":
-    print(search("table"))
+    return result
