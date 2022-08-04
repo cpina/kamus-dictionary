@@ -10,7 +10,14 @@
         {{ sense.sense }}
         <ul>
             {% for translation in sense.translations %}
-                <li>{{ translation }}</li>
+                <li>{{ translation.translation }}
+                {% for alternative in translation.alternatives %}
+                    {% if forloop.first %}
+                        <i>Alternatives: </i>
+                    {% endif %}
+                    {{ alternative.translation }}
+                {% endfor %}
+                </li>
             {% empty %}
                 <li><i>No translation available for this sense</i></li>
             {% endfor %}

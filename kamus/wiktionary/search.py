@@ -8,7 +8,17 @@ def get_translation(language_code, text):
     result = []
 
     for translation in translations:
-        result.append(translation.group(1))
+        translation_text = translation.group(1)
+
+        # translation_text could be like: "hola|alt=hola?"
+        # if it has "alt=..." we remove it and add it as
+        # alternative
+
+        m = re.search(r"(.+?)\|alt=(.+)$", translation_text)
+        if m is not None:
+            result.append({"translation": m.group(1), "alternatives": [{"translation": m.group(2)}]})
+        else:
+            result.append({"translation": translation.group(1)})
 
     return result
 
