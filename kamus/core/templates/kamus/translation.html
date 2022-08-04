@@ -10,7 +10,7 @@
         {{ sense.sense }}
         <ul>
             {% for translation in sense.translations %}
-                <li>{{ translation.translation }}
+                <li>{% include "kamus/_translation.html" with translation=translation only %}
                 {% for alternative in translation.alternatives %}
                     {% if forloop.first %}
                         <i>Alternatives: </i>

@@ -1,6 +1,32 @@
 import pywikibot
 import re
 
+def expand_gender_plural(word):
+    m = re.search(r"(.+?)\|([mf])", word)
+
+    if m is not None:
+        return {"translation": m.group(1), "gender": m.group(2)}
+    else:
+        return {"translation": word}
+
+
+def translation_text_to_dictionary(translation_text):
+    """
+    From hola|m returns {"translation": "hola", "gender": "m"}
+    From hola|m returns {"translation": "hola", "gender": "m"}
+    # From hola|alt=hola? returns {"translation": "hola", "alternatives": [{"translation": "hola"}]
+    """
+    # if
+
+    m = re.search(r"(.+?)\|alt=(.+)$", translation_text)
+    if m is not None:
+        translation = {**expand_gender_plural(m.group(1)), "alternatives": [{"translation": m.group(2)}]}
+    else:
+        translation = {**expand_gender_plural(translation_text)}
+
+
+    return translation
+
 
 def get_translation(language_code, text):
     translations = re.finditer(r"\{\{tt?\+?\|" + language_code + r"\|(.+?)}}", text)
@@ -10,15 +36,11 @@ def get_translation(language_code, text):
     for translation in translations:
         translation_text = translation.group(1)
 
+        result.append(translation_text_to_dictionary(translation_text))
+
         # translation_text could be like: "hola|alt=hola?"
         # if it has "alt=..." we remove it and add it as
         # alternative
-
-        m = re.search(r"(.+?)\|alt=(.+)$", translation_text)
-        if m is not None:
-            result.append({"translation": m.group(1), "alternatives": [{"translation": m.group(2)}]})
-        else:
-            result.append({"translation": translation.group(1)})
 
     return result
 
