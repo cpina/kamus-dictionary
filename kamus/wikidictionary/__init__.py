@@ -46,9 +46,4 @@ LANGUAGES = {
     "zh": "中文<",
 }
 
-LANGUAGES_LIST = []
-
-for short, long in LANGUAGES.items():
-    LANGUAGES_LIST.append((short, long))
-
-print()
+LANGUAGES = dict(sorted(LANGUAGES.items()))
