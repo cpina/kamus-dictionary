@@ -39,6 +39,11 @@ class SearchTests(unittest.TestCase):
                 "translations": [{"translation": "radiador", "gender": "m"}],
                 "text": "* Catalan: {{t+|ca|radiador|m}}"
             },
+            {
+                "language_code": "ca",
+                "translations": [{"translation": "pilotes", "gender": "f", "number": "p"}],
+                "text": "* Catalan: {{t+|ca|pilotes|f-p}}"
+            },
         ]
 
         for param in test_params:

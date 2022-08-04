@@ -2,13 +2,20 @@ import pywikibot
 import re
 
 def expand_gender_plural(word):
-    m = re.search(r"(.+?)\|([mf])", word)
+    m = re.search(r"(?P<word>.+?)\|(?P<gender>[mf])-?(?P<number>[ps])?", word)
 
     if m is not None:
-        return {"translation": m.group(1), "gender": m.group(2)}
-    else:
-        return {"translation": word}
+        translation = {"translation": m.group("word")}
 
+        if m.group("gender"):
+            translation["gender"] = m.group("gender")
+
+        if m.group("number"):
+            translation["number"] = m.group("number")
+    else:
+        translation = {"translation": word}
+
+    return translation
 
 def translation_text_to_dictionary(translation_text):
     """

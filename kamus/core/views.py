@@ -33,8 +33,8 @@ class Translate(TemplateView):
         source = search_form.cleaned_data["from"]
         to = search_form.cleaned_data["to"]
 
-        self.request.session['source'] = source
-        self.request.session['to'] = to
+        self.request.session["source"] = source
+        self.request.session["to"] = to
 
         context["word"] = word
         context["translations"] = search(source, to, word)
