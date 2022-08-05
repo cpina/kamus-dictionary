@@ -39,6 +39,9 @@ class Translate(TemplateView):
         context["word"] = word
         context["translations"] = search(source, to, word)
 
+        url_parameters_without_word = self.request.GET.copy()
+        del url_parameters_without_word["word"]
+        context["base_link_to_word"] = "?" + url_parameters_without_word.urlencode()
         context["search"] = SearchForm(initial=get_languages_config(self.request.session))
 
         return context

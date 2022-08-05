@@ -1,5 +1,5 @@
 {% if also %} (see also translations for:
-    {% for a in also %}
+    {% for word in also %}
         {% if not forloop.first %},{% endif %}
-        {{ a }}{% endfor %})
+        {% include "_link_word.html" with word=word base_link_to_word=base_link_to_word only %}{% endfor %})
 {% endif %}

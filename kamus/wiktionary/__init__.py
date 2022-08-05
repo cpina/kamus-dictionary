@@ -40,6 +40,7 @@ ALL_LANGUAGES = {
     "vi": "Tiếng Việt",
     "zh": "中文<",
     "sw": "Swahili",
+    "la": "Latin",
 }
 
 FROM_LANGUAGES = {
