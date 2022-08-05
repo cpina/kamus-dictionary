@@ -25,7 +25,6 @@ def translation_text_to_dictionary(translation_text):
     From hola|m returns {"translation": "hola", "gender": "m"}
     # From hola|alt=hola? returns {"translation": "hola", "alternatives": [{"translation": "hola"}]
     """
-    # if
 
     m = re.search(r"(.+?)\|alt=(.+)$", translation_text)
     if m is not None:
@@ -49,6 +48,21 @@ def get_translation(language_code, text):
     return result
 
 
+def get_senses(text):
+    senses = []
+
+    for trans_top in re.finditer(r"{{trans-top\|(.+)}}", text):
+        trans_bottom = re.search(r"{{trans-bottom}}", text[trans_top.start():])
+
+        if trans_bottom is None:
+            # TODO: log, Wiktionary page broken
+            continue
+
+        senses.append({"sense": trans_top.group(1), "startpos": trans_top.start(),
+                                 "endpos": trans_top.start() + trans_bottom.end()})
+
+    return senses
+
 def search(source, to, word):
     site = pywikibot.Site(source, "wiktionary")
     page = pywikibot.Page(site, word)
@@ -57,17 +71,7 @@ def search(source, to, word):
 
     result["source"] = page.full_url()
 
-    result["senses"] = []
-
-    for trans_top in re.finditer(r"trans-top\|(.+)}}", page.text):
-        trans_bottom = re.search(r"trans-bottom", page.text[trans_top.start():])
-
-        if trans_bottom is None:
-            # TODO: log, Wiktionary page broken
-            continue
-
-        result["senses"].append({"sense": trans_top.group(1), "startpos": trans_top.start(),
-                                 "endpos": trans_top.start() + trans_bottom.end()})
+    result["senses"] = get_senses(page.text)
 
     for sense in result["senses"]:
         translations_section = page.text[sense["startpos"]:sense["endpos"]]

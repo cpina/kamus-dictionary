@@ -1,12 +1,7 @@
 
 # LANGUAGES taken from https://wiktionary.org HTML code
-LANGUAGES = {
-    "cs": "Čeština",
+ALL_LANGUAGES = {
     "ca": "Català",
-    "pl": "Polski",
-    "de": "Deutsch",
-    "et": "Eesti",
-    "el": "Ελληνικά",
     "en": "English",
     "es": "Español",
     "eo": "Esperanto",
@@ -44,6 +39,13 @@ LANGUAGES = {
     "tr": "Türkçe",
     "vi": "Tiếng Việt",
     "zh": "中文<",
+    "sw": "Swahili",
 }
 
-LANGUAGES = dict(sorted(LANGUAGES.items()))
+FROM_LANGUAGES = {
+    "ca": "Catalan",
+    "en": "English",
+}
+
+ALL_LANGUAGES = dict(sorted(ALL_LANGUAGES.items()))
+FROM_LANGUAGES = dict(sorted(FROM_LANGUAGES.items()))

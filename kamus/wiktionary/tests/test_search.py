@@ -1,6 +1,6 @@
 import unittest
 
-from wiktionary.search import get_translation
+from wiktionary.search import get_translation, get_senses
 
 
 class SearchTests(unittest.TestCase):
@@ -49,3 +49,28 @@ class SearchTests(unittest.TestCase):
         for param in test_params:
             with self.subTest(params=param):
                 self.assertEqual(param["translations"], get_translation(param["language_code"], param["text"]))
+
+    def test_get_senses(self):
+        test_params = [
+            {
+                "text": """blah blah
+{{trans-top|short greeting}}
+* Catalan: {{t+|ca|adéu}}
+{{trans-bottom}}something more""",
+                "senses": [{'endpos': 81, 'sense': 'short greeting', 'startpos': 10}]
+            },
+            {
+                "text": """blah blah
+{{trans-top|short greeting}}
+* Catalan: {{t+|ca|adéu}}
+{{trans-bottom}}something more
+{{trans-top|something else}}
+* Spanish something
+{{trans-bottom}}footnote""",
+                "senses": [{'endpos': 81, 'sense': 'short greeting', 'startpos': 10}, {'endpos': 161, 'sense': 'something else', 'startpos': 96}]
+            }
+        ]
+
+        for param in test_params:
+            with self.subTest(params=param):
+                self.assertEqual(get_senses(param["text"]), param["senses"])

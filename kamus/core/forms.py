@@ -3,7 +3,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit
 from django import forms
 
-from wiktionary import LANGUAGES
+from wiktionary import FROM_LANGUAGES, ALL_LANGUAGES
 
 
 class SearchForm(forms.Form):
@@ -12,8 +12,8 @@ class SearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["from"] = forms.CharField(label="From", widget=forms.Select(choices=LANGUAGES.items()))
-        self.fields["to"] = forms.CharField(label="To", widget=forms.Select(choices=LANGUAGES.items()))
+        self.fields["from"] = forms.CharField(label="From", widget=forms.Select(choices=FROM_LANGUAGES.items()))
+        self.fields["to"] = forms.CharField(label="To", widget=forms.Select(choices=ALL_LANGUAGES.items()))
         self.fields["word"] = forms.CharField(label="Word")
 
         self.helper = FormHelper()
