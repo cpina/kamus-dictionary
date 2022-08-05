@@ -1,0 +1,5 @@
+{% if also %} (see also translations for:
+    {% for a in also %}
+        {% if not forloop.first %},{% endif %}
+        {{ a }}{% endfor %})
+{% endif %}

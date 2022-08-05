@@ -67,7 +67,15 @@ class SearchTests(unittest.TestCase):
 {{trans-top|something else}}
 * Spanish something
 {{trans-bottom}}footnote""",
-                "senses": [{'endpos': 81, 'sense': 'short greeting', 'startpos': 10}, {'endpos': 161, 'sense': 'something else', 'startpos': 96}]
+                "senses": [{'endpos': 81, 'sense': 'short greeting', 'startpos': 10},
+                           {'endpos': 161, 'sense': 'something else', 'startpos': 96}]
+            },
+            {
+                "text": """blah blah
+        {{trans-top-also|short greeting|goodbye}}
+        * Catalan: {{t+|ca|adéu}}
+        {{trans-bottom}}something more""",
+                "senses": [{'also': ['goodbye'], 'endpos': 118, 'sense': 'short greeting', 'startpos': 18}]
             }
         ]
 

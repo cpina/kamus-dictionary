@@ -7,7 +7,7 @@
     <h1>{{ word }}</h1>
 
     {% for sense in translations.senses %}
-        {{ sense.sense }}
+        {{ sense.sense }}{% include "kamus/_also.html" with also=sense.also only %}
         <ul>
             {% for translation in sense.translations %}
                 <li>{% include "kamus/_translation.html" with translation=translation only %}

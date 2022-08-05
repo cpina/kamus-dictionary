@@ -49,19 +49,27 @@ def get_translation(language_code, text):
 
 
 def get_senses(text):
-    senses = []
+    result = []
 
-    for trans_top in re.finditer(r"{{trans-top\|(.+)}}", text):
+    for trans_top in re.finditer(r"{{trans-top(-also)?\|(.+)}}", text):
         trans_bottom = re.search(r"{{trans-bottom}}", text[trans_top.start():])
 
         if trans_bottom is None:
             # TODO: log, Wiktionary page broken
             continue
 
-        senses.append({"sense": trans_top.group(1), "startpos": trans_top.start(),
+        senses = trans_top.group(2).split("|")
+
+        main_sense = senses[0]
+
+        also = {}
+        if len(senses) > 1:
+            also["also"] = senses[1:]
+
+        result.append({"sense": main_sense, **also, "startpos": trans_top.start(),
                                  "endpos": trans_top.start() + trans_bottom.end()})
 
-    return senses
+    return result
 
 def search(source, to, word):
     site = pywikibot.Site(source, "wiktionary")
