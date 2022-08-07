@@ -16,7 +16,7 @@ services:
       - DB_PORT=${KAMUS_DB_PORT}
         # TODO: move it outside docker-compose.yml
       - PYWIKIBOT_NO_USER_CONFIG=1
-      - PYWIKIBOT_DIR=/tmp
+      - PYWIKIBOT_DIR=/tmp/pywikibot
     volumes:
       - static_volume:/code/kamus/staticfiles
       - ./kamus:/code/kamus

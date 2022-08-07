@@ -4,6 +4,15 @@
 
 set -eu
 
+# TODO: not using yet the configuration but needs
+# to exist to make it use it for temporary files
+mkdir -p "$PYWIKIBOT_DIR"
+touch "$PYWIKIBOT_DIR/user-config.py"
+# since we deal with this we add user_agent_description
+# (TODO needs testing)
+# TODO: move to the config
+echo "user_agent_description = Kamus dictionary; https://kamus.pina.cat; carles@pina.cat"
+
 # python3 manage.py check --deploy --fail-level WARNING
 python3 manage.py collectstatic --no-input --clear
 
