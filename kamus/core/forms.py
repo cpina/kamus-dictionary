@@ -7,6 +7,23 @@ from django import forms
 from core.models import Language, WordWithTranslation
 from wiktionary import FROM_LANGUAGES, ALL_LANGUAGES
 
+class ModelSelect2Bootstrap5(autocomplete.ModelSelect2):
+    @property
+    def media(self):
+        return forms.Media(
+            js=(
+                'admin/js/vendor/select2/select2.full.js',
+                'autocomplete_light/autocomplete_light.js',
+                'autocomplete_light/select2.js',
+                'js/enable-select2-bootstrap5-theme.js', # added
+            ),
+            css={
+                'screen': (
+                    'admin/css/vendor/select2/select2.css',
+                    'admin/css/autocomplete.css',
+                    'https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css', # added
+                ),
+            })
 
 class SearchForm(forms.Form):
     FORM_NAME = "search"
@@ -23,7 +40,7 @@ class SearchForm(forms.Form):
         # self.fields["word"] = forms.CharField(label="Word")
         self.fields["word"] = forms.ModelChoiceField(label="Word",
                                                      queryset=WordWithTranslation.objects.all().order_by("word"),
-                                                     widget=autocomplete.ModelSelect2("autocomplete-word-with-translation", attrs={"data-minimum-input-length": 3}),
+                                                     widget=ModelSelect2Bootstrap5("autocomplete-word-with-translation", attrs={"data-minimum-input-length": 3}),
                                                      to_field_name="word",
                                                      )
 
