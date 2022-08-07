@@ -134,3 +134,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ADMINS=[("Carles Pina i Estany", "carles@pina.cat")]
+DEFAULT_FROM_EMAIL = SERVER_EMAIL = os.environ["DEFAULT_FROM_EMAIL"]
+EMAIL_HOST = os.environ['EMAIL_HOST']
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+EMAIL_SUBJECT_PREFIX = "[kamus] "
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+
