@@ -12,20 +12,22 @@
 
     <link rel="stylesheet" type="text/css" href="{% static '/css/css.css' %}">
 
-    <title>{% block title %}{% endblock %}</title>
+    <title>Kamus Dictionary - {% block title %}{% endblock %}</title>
 </head>
 <body>
 
 <main class="flex-shrink-0">
     <div class="container mt-4">
 
-    <!-- jquery needed by the autocomplete features -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <!-- jquery needed by the autocomplete features -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+                integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
         {% block contents %}{% endblock %}
+
         <footer class="text-secondary">
             <hr>
-            <a href="https://github.com/cpina/kamus-dictionary">Code</a>
+            <a href="{% url 'information' %}">More information.</a>
         </footer>
     </div>
 </main>

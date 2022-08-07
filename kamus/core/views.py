@@ -20,6 +20,8 @@ class Homepage(TemplateView):
 
         return context
 
+class Information(TemplateView):
+    template_name = "kamus/information.html"
 
 class Translate(TemplateView):
     template_name = "kamus/translation.html"
