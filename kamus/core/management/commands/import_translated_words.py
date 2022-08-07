@@ -1,3 +1,4 @@
+import subprocess
 import time
 from pathlib import Path
 
@@ -12,11 +13,27 @@ from core.models import Language, WordWithTranslation
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
-        parser.add_argument("filename", type=str)
+        parser.add_argument("filename", type=str, help="https:// or local file")
 
     def handle(self, *args, **options):
         import_words(options["filename"])
 
+
+
+def open_wiktionary(file_path):
+    if file_path.startswith("https://"):
+        result = subprocess.Popen(["bash", "-c", f"curl {file_path} | bunzip2"], stdout=subprocess.PIPE)
+        return result.stdout
+    else:
+        return open(file_path, "rb")
+
+def language_from_file_path(file_path):
+    file_name = file_path.split("/")[-1]
+
+    if file_name.startswith("enwiktionary-"):
+        return Language.objects.get(code="en")
+    else:
+        raise NotImplemented(f"Filename handling for {file_name} not implemented")
 
 
 @transaction.atomic
@@ -28,19 +45,14 @@ def import_words(file_path):
     # inserts the words in a way slower speed).
     # (perhaps allowing duplicates is not the end of the world in this case,
     # or could be checked in memory before inserting it?)
-    file_path = Path(file_path)
 
-    if file_path.stem.startswith("enwiktionary-"):
-        language = Language.objects.get(code="en")
-    else:
-        # needs to fix, let's see which languages and how the files are named
-        raise ValueError("Cannot determine languagecode from filename")
+    language = language_from_file_path(file_path)
+
+    file_with_words = open_wiktionary(file_path)
 
     WordWithTranslation.objects.all().delete()
 
-    f = file_path.open(mode="rb")
-
-    context = etree.iterparse(f, events=("start", "end"))
+    context = etree.iterparse(file_with_words, events=("start", "end"))
 
     title = None
 
@@ -50,9 +62,6 @@ def import_words(file_path):
 
     for event, elem in context:
         tag = etree.QName(elem.tag).localname
-
-        if event == "start" and tag == "page":
-            in_page = True
 
         if event == "end" and tag == "title":
             title = elem.text
