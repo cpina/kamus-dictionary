@@ -29,7 +29,7 @@ ALL_LANGUAGES = \
   'udm': 'Udmurt', 'uga': 'Ugaritic', 'uk': 'Ukrainian', 'umb': 'Umbundu', 'ur': 'Urdu', 'ug': 'Uyghur', 'uz': 'Uzbek',
   'vec': 'Venetian', 'vi': 'Vietnamese', 'wym': 'Vilamovian', 'wa': 'Walloon', 'war': 'Waray-Waray', 'cy': 'Welsh',
   'mww': 'White Hmong', 'win': 'Winnebago', 'yai': 'Yagnobi', 'sah': 'Yakut', 'yi': 'Yiddish', 'esu': "Yup'ik",
-  'zza': 'Zazaki', 'za': 'Zhuang', 'zu': 'Zulu'}
+  'zza': 'Zazaki', 'za': 'Zhuang', 'zu': 'Zulu', 'en': 'English'}
 
 FROM_LANGUAGES = {
     "en": "English",

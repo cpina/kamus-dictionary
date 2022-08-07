@@ -8,7 +8,7 @@ class Language(models.Model):
         return self.name
 
 class WordWithTranslation(models.Model):
-    word = models.CharField(max_length=100)
+    word = models.CharField(max_length=100, db_collation="utf8_bin")
     language = models.ForeignKey(Language, on_delete=models.PROTECT)
 
     class Meta:
