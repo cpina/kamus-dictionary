@@ -5,11 +5,12 @@ COPY requirements.txt entrypoint.sh tools/wait-for-mysql.sh /code/
 
 RUN apt-get update && apt-get install --no-install-recommends --yes \
 	python3-pip \
-	libmariadbclient-dev libmariadb-dev-compat libmariadb3 mariadb-client \
-	gcc-7 gcc
+	libmariadb-dev libpython3-dev gcc \
+	mariadb-client # to check if mariadb server is available \
+	curl bzip2
 RUN pip3 install -r /code/requirements.txt
 RUN apt-get purge -y libmariadbclient-dev libmariadb-dev-compat \
-	gcc-7 gcc libpython3.7-dev && \
+	gcc libpython3-dev && \
    apt-get autoremove -y && \
    apt-get clean
 WORKDIR /code/kamus

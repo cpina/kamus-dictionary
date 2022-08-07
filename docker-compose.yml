@@ -9,6 +9,7 @@ services:
     environment:
       - DEBUG=0
       - SECRET_KEY=${KAMUS_SECRET_KEY}
+      - DB_USER=${KAMUS_DB_USER}
       - DB_NAME=${KAMUS_DB_NAME}
       - DB_PASSWORD=${KAMUS_DB_PASSWORD}
       - DB_HOST=${KAMUS_DB_HOST}

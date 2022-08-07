@@ -6,7 +6,7 @@
 maxcounter=45
 
 counter=1
-while ! mysql --defaults-file="/var/run/secrets/project_application_mysql.conf" --execute="show databases;"
+while ! mariadb -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" --execute="show databases;"
 do
     echo "Waiting for Mysql..."
     sleep 1
