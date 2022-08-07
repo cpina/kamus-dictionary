@@ -60,6 +60,8 @@ def import_words(file_path):
 
     start_time = time.time()
 
+    added_words = set()
+
     for event, elem in context:
         tag = etree.QName(elem.tag).localname
 
@@ -71,12 +73,15 @@ def import_words(file_path):
                 # The word is translated: add it to the table
                 if len(title) > 100:
                     print("Too long title:", title)
+                elif title in added_words:
+                    print("Duplicated word:", title)
                 else:
                     WordWithTranslation.objects.create(word=title, language=language)
+                    added_words.add(title)
                     counter += 1
 
                     if counter % 1000 == 0:
-                        print("Imported ", counter, "words")
+                        print("\nImported ", counter, "words")
 
         if event == "end" and tag == "page":
             title = None
