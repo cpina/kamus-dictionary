@@ -11,7 +11,13 @@ $(document).on('select2:open', (e) => {
 
 // TODO attach only to the correct thing
 $('*').on('select2:select', function () {
-    $('form')[0].submit();
+    let form = $('form')[0];
+
+    if (form.checkValidity()) {
+        form.submit();
+    } else {
+        form.reportValidity();
+    }
 });
 
 // From: https://stackoverflow.com/a/49261426/9294284
