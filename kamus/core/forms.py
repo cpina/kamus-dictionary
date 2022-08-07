@@ -3,6 +3,7 @@ from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit
 from django import forms
+from django.core.exceptions import ValidationError
 
 from core.models import Language, WordWithTranslation
 from wiktionary import FROM_LANGUAGES, ALL_LANGUAGES
@@ -25,6 +26,31 @@ class ModelSelect2Bootstrap5(autocomplete.ModelSelect2):
                 ),
             })
 
+class CaseSensitiveModelChoiceField(forms.ModelChoiceField):
+    def to_python(self, value):
+        # Copied from Python's implementation... with a small
+        # change for allowing multiple values (for capitalisation)
+        if value in self.empty_values:
+            return None
+        try:
+            key = self.to_field_name or "pk"
+            if isinstance(value, self.queryset.model):
+                value = getattr(value, key)
+            db_values = self.queryset.filter(**{key: value})
+            # There can be more than one... if there are words with
+            # different capitalization. For example apple and Apple
+            for db_value in db_values:
+                if getattr(db_value, key) == value:
+                    return db_value
+        except (ValueError, TypeError, self.queryset.model.DoesNotExist):
+            raise ValidationError(
+                self.error_messages["invalid_choice"],
+                code="invalid_choice",
+                params={"value": value},
+            )
+        return value
+
+
 class SearchForm(forms.Form):
     FORM_NAME = "search"
 
@@ -38,9 +64,9 @@ class SearchForm(forms.Form):
                                                    to_field_name="code",
                                                    )
         # self.fields["word"] = forms.CharField(label="Word")
-        self.fields["word"] = forms.ModelChoiceField(label="Word",
+        self.fields["word"] = CaseSensitiveModelChoiceField(label="Word",
                                                      queryset=WordWithTranslation.objects.all().order_by("word"),
-                                                     widget=ModelSelect2Bootstrap5("autocomplete-word-with-translation", attrs={"data-minimum-input-length": 3}),
+                                                     widget=ModelSelect2Bootstrap5("autocomplete-word-with-translation", attrs={"data-minimum-input-length": 2}),
                                                      to_field_name="word",
                                                      )
 

@@ -8,3 +8,8 @@ $(document).on('select2:open', (e) => {
         value.focus();
     });
 });
+
+// TODO attach only to the correct thing
+$('*').on('select2:select', function () {
+    $('form')[0].submit();
+});
