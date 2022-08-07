@@ -6,7 +6,7 @@ from wiktionary.search import search
 
 def get_languages_config(session):
     return {"from": session.get("from", "en"),
-            "to": session.get("to", "ca")
+            "to": session.get("to", None)
             }
 
 class Homepage(TemplateView):
