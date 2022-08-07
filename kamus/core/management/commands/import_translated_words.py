@@ -83,6 +83,4 @@ def import_words(file_path):
             elem.clear()
             del elem
 
-    f.close()
-
     print("Minutes to import file: ", (time.time()-start_time)/60)
