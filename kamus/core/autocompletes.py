@@ -10,6 +10,8 @@ class LanguageAutocomplete(autocomplete.Select2QuerySetView):
         if self.q:
             qs = qs.filter(name__istartswith=self.q)
 
+        qs = qs.order_by("name")
+
         return qs
 
 class WordWithTranslationAutocomplete(autocomplete.Select2QuerySetView):
@@ -24,5 +26,7 @@ class WordWithTranslationAutocomplete(autocomplete.Select2QuerySetView):
 
         if self.q:
             qs = qs.filter(word__istartswith=self.q)
+
+        qs = qs.order_by("word")
 
         return qs
