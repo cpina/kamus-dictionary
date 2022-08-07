@@ -21,6 +21,13 @@ class Command(BaseCommand):
 
 @transaction.atomic
 def import_words(file_path):
+    # TODO: use https://docs.djangoproject.com/en/4.1/ref/models/querysets/#django.db.models.query.QuerySet.bulk_create
+    # with (maybe!) "ignore_conflicts" would speed up this process.
+    # In a laptop from 2013 importing all the 110K English words takes
+    # about 11 minutes (but since checking the duplicates towards the end if
+    # inserts the words in a way slower speed).
+    # (perhaps allowing duplicates is not the end of the world in this case,
+    # or could be checked in memory before inserting it?)
     file_path = Path(file_path)
 
     if file_path.stem.startswith("enwiktionary-"):
@@ -56,10 +63,7 @@ def import_words(file_path):
                 if len(title) > 100:
                     print("Too long title:", title)
                 else:
-                    word_with_translation, created = WordWithTranslation.objects.get_or_create(word=title, language=language)
-                    if created is False:
-                        print("Duplicated entry:", title)
-
+                    WordWithTranslation.objects.create(word=title, language=language)
                     counter += 1
 
                     if counter % 1000 == 0:
