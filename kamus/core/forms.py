@@ -1,8 +1,10 @@
+from dal import autocomplete
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit
 from django import forms
 
+from core.models import Language
 from wiktionary import FROM_LANGUAGES, ALL_LANGUAGES
 
 
@@ -13,7 +15,11 @@ class SearchForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.fields["from"] = forms.CharField(label="From", widget=forms.Select(choices=FROM_LANGUAGES.items()))
-        self.fields["to"] = forms.CharField(label="To", widget=forms.Select(choices=ALL_LANGUAGES.items()))
+        self.fields["to"] = forms.ModelChoiceField(label="To",
+                                                   queryset=Language.objects.all().order_by(("name")),
+                                                   # widget=autocomplete.ModelSelect2("autocomplete-languages"),
+                                                   to_field_name="code",
+                                                   )
         self.fields["word"] = forms.CharField(label="Word")
 
         self.helper = FormHelper()

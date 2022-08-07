@@ -1,6 +1,7 @@
 from django.views.generic import TemplateView
 
 from core.forms import SearchForm
+from core.models import Language
 from wiktionary.search import search
 
 def get_languages_config(session):
@@ -15,6 +16,7 @@ class Homepage(TemplateView):
         context = super().get_context_data(**kwargs)
 
         context["search"] = SearchForm(initial=get_languages_config(self.request.session))
+        # context["search"] = SearchForm()
 
         return context
 
@@ -31,7 +33,7 @@ class Translate(TemplateView):
 
         word = search_form.cleaned_data["word"]
         source = search_form.cleaned_data["from"]
-        to = search_form.cleaned_data["to"]
+        to = search_form.cleaned_data["to"].code
 
         self.request.session["source"] = source
         self.request.session["to"] = to
