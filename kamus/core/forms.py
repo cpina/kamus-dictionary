@@ -4,7 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit
 from django import forms
 
-from core.models import Language
+from core.models import Language, WordWithTranslation
 from wiktionary import FROM_LANGUAGES, ALL_LANGUAGES
 
 
@@ -16,11 +16,16 @@ class SearchForm(forms.Form):
 
         self.fields["from"] = forms.CharField(label="From", widget=forms.Select(choices=FROM_LANGUAGES.items()))
         self.fields["to"] = forms.ModelChoiceField(label="To",
-                                                   queryset=Language.objects.all().order_by(("name")),
+                                                   queryset=Language.objects.all().order_by("name"),
                                                    # widget=autocomplete.ModelSelect2("autocomplete-languages"),
                                                    to_field_name="code",
                                                    )
-        self.fields["word"] = forms.CharField(label="Word")
+        # self.fields["word"] = forms.CharField(label="Word")
+        self.fields["word"] = forms.ModelChoiceField(label="Word",
+                                                     queryset=WordWithTranslation.objects.all().order_by("word"),
+                                                     widget=autocomplete.ModelSelect2("autocomplete-word-with-translation", attrs={"data-minimum-input-length": 3}),
+                                                     to_field_name="word",
+                                                     )
 
         self.helper = FormHelper()
         self.helper.form_method = "get"

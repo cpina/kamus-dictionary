@@ -31,7 +31,7 @@ class Translate(TemplateView):
 
         assert search_form.is_valid()
 
-        word = search_form.cleaned_data["word"]
+        word = search_form.cleaned_data["word"].word
         source = search_form.cleaned_data["from"]
         to = search_form.cleaned_data["to"].code
 
