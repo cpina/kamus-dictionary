@@ -1,2 +1,4 @@
 # kamus-dictionary
-Prototype of an interface to use Wiktionary translations
+Prototype of an interface to use Wiktionary translations.
+
+More information in https://kamus.pina.cat/information/
