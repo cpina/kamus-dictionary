@@ -50,7 +50,7 @@ def import_words(file_path):
 
     file_with_words = open_wiktionary(file_path)
 
-    WordWithTranslation.objects.all().delete()
+    WordWithTranslation.objects.all().filter(language=language).delete()
 
     context = etree.iterparse(file_with_words, events=("start", "end"))
 
