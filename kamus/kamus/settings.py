@@ -23,7 +23,11 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 
 DEBUG = os.environ.get("DEBUG", False) == "1"
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["kamus.pina.cat"]
+
+# For login in admin for example. TODO: check why this is needed in
+# this deployment but in Django 3.X I'm sure that I didn't need it.
+CSRF_TRUSTED_ORIGINS = ["https://kamus.pina.cat"]
 
 
 # Application definition
@@ -146,3 +150,4 @@ EMAIL_SUBJECT_PREFIX = "[kamus] "
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
