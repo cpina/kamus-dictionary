@@ -17,6 +17,10 @@ services:
         # TODO: move it outside docker-compose.yml
       - PYWIKIBOT_NO_USER_CONFIG=1
       - PYWIKIBOT_DIR=/tmp/pywikibot
+      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
     volumes:
       - static_volume:/code/kamus/staticfiles
       - ./kamus:/code/kamus

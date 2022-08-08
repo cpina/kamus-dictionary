@@ -23,7 +23,11 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 
 DEBUG = os.environ.get("DEBUG", False) == "1"
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["kamus.pina.cat"]
+
+# For login in admin for example. TODO: check why this is needed in
+# this deployment but in Django 3.X I'm sure that I didn't need it.
+CSRF_TRUSTED_ORIGINS = ["https://kamus.pina.cat"]
 
 
 # Application definition
@@ -130,7 +134,20 @@ STATIC_URL = 'static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+SESSION_COOKIE_AGE = 3600*24*90 # 90 days
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ADMINS=[("Carles Pina i Estany", "carles@pina.cat")]
+DEFAULT_FROM_EMAIL = SERVER_EMAIL = os.environ["DEFAULT_FROM_EMAIL"]
+EMAIL_HOST = os.environ['EMAIL_HOST']
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+EMAIL_SUBJECT_PREFIX = "[kamus] "
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
