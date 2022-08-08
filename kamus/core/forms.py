@@ -6,7 +6,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from core.models import Language, WordWithTranslation
-from wiktionary import FROM_LANGUAGES, ALL_LANGUAGES
+from wiktionary import FROM_LANGUAGES
 
 class ModelSelect2Bootstrap5(autocomplete.ModelSelect2):
     @property
