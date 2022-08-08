@@ -48,6 +48,11 @@ class SearchTests(unittest.TestCase):
                 "language_code": "la",
                 "translations": [{"translation": "rationarium", "lexical_categories": "n"}],
                 "text": "* Latin: {{tt|la|rationarium|n}}"
+            },
+            {
+                "language_code": "cmn",
+                "translations": [{"translation": "你好", "transcription": "nǐ hǎo"}],
+                "text": "*: Mandarin: {{tt+|cmn|你好|tr=nǐ hǎo}}",
             }
         ]
 

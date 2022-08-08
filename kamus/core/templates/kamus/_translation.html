@@ -3,3 +3,4 @@
     <i>({% if translation.gender %}{{ translation.gender }}{% endif %}{% if translation.number %}
         {{ translation.number }}{% endif %}{% if translation.lexical_categories %}{{ translation.lexical_categories }}{% endif %}</i>)
 {% endif %}
+{% if translation.transcription %}({{ translation.transcription }}){% endif %}

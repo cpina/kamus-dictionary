@@ -3,7 +3,7 @@ import re
 
 
 def expand_gender_plural(word):
-    m = re.search(r"(?P<word>.+?)\|(?P<gender>[mf])?-?(?P<number>[ps])?-?(?P<lexical_categories>[n]?)?", word)
+    m = re.search(r"(?P<word>.+?)\|(?P<gender>[mf])?-?(?P<number>[ps])?-?(?P<lexical_categories>[n])?-?(?P<transcription>tr=.+)?", word)
 
     if m is not None:
         translation = {"translation": m.group("word")}
@@ -16,6 +16,9 @@ def expand_gender_plural(word):
 
         if m.group("lexical_categories"):
             translation["lexical_categories"] = m.group("lexical_categories")
+
+        if m.group("transcription"):
+            translation["transcription"] = m.group("transcription")[len("tr="):]
     else:
         translation = {"translation": word}
 
