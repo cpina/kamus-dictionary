@@ -1,5 +1,5 @@
 {{ translation.translation }}
-{% if translation.gender or translation.number %}
+{% if translation.gender or translation.number or translation.lexical_categories %}
     <i>({% if translation.gender %}{{ translation.gender }}{% endif %}{% if translation.number %}
-        {{ translation.number }}{% endif %})</i>
+        {{ translation.number }}{% endif %}{% if translation.lexical_categories %}{{ translation.lexical_categories }}{% endif %}</i>)
 {% endif %}
