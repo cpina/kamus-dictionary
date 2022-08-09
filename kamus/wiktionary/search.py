@@ -39,12 +39,15 @@ def translation_text_to_dictionary(translation_text):
 
 
 def get_translation(language_code, text):
-    translations = re.finditer(r"\{\{tt?\+?\|" + language_code + r"\|(.+?)}}", text)
+    # To find in text: : '* Basque: {{tt+|eu|kaixo}}
+    #                     * Catalan: {{tt+|ca|hola}}'
+
+    translations = re.finditer(r"{{tt?\+?\|" + language_code + r"\|(?P<translation>.+?)}}", text)
 
     result = []
 
     for translation in translations:
-        translation_text = translation.group(1)
+        translation_text = translation.group("translation")
 
         result.append(translation_text_to_dictionary(translation_text))
 
