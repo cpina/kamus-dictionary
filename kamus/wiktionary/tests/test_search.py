@@ -63,8 +63,17 @@ class SearchTests(unittest.TestCase):
                 "language_code": "nl",
                 "translations": [{'translation': 'doei', "qualifier": "informal"}],
                 "text": "* Dutch: {{t+|nl|doei}} {{qualifier|informal}}",
+            },
+            {
+                "language_code": "hu",
+                "translations": [{'translation': 'agyő', 'qualifier': 'dated'}],
+                "text": "* Hungarian: {{q|dated}} {{t|hu|agyő}}",
+            },
+            {
+                "language_code": "hu",
+                "translations": [{'translation': 'agyő', 'qualifier': 'dated'}],
+                "text": "* Hungarian: {{qualifier|dated}} {{t|hu|agyő}}",
             }
-
         ]
 
         for param in test_params:

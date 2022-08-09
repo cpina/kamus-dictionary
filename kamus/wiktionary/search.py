@@ -41,8 +41,9 @@ def translation_text_to_dictionary(translation_text):
 def get_translation(language_code, text):
     # To find in text: : '* Basque: {{tt+|eu|kaixo}}
     #                     * Catalan: {{tt+|ca|hola}}'
-
-    translations = re.finditer(r"{{tt?\+?\|" + language_code + r"\|(?P<translation>.+?)}} ?({{q(ualifier)?\|(?P<qualifier>.+?)}})?", text)
+    qualifier_pre = r"({{q(ualifier)?\|(?P<qualifier_pre>.+?)}})?"
+    qualifier_post = r"({{q(ualifier)?\|(?P<qualifier_post>.+?)}})?"
+    translations = re.finditer(qualifier_pre + r" ?{{tt?\+?\|" + language_code + r"\|(?P<translation>.+?)}} ?" + qualifier_post, text)
 
     result = []
 
@@ -51,8 +52,12 @@ def get_translation(language_code, text):
 
         translation_dictionary = translation_text_to_dictionary(translation_text)
 
-        if translation.group("qualifier"):
-            translation_dictionary["qualifier"] = translation.group("qualifier")
+        if translation.group("qualifier_post"):
+            translation_dictionary["qualifier"] = translation.group("qualifier_post")
+
+        if translation.group("qualifier_pre"):
+            # It assumes that qualifier_pre and post does not exist. Never seen it
+            translation_dictionary["qualifier"] = translation.group("qualifier_pre")
 
         result.append(translation_dictionary)
 
