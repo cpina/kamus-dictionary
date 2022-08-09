@@ -46,7 +46,7 @@ class SearchTests(unittest.TestCase):
             },
             {
                 "language_code": "la",
-                "translations": [{"translation": "rationarium", "lexical_categories": "n"}],
+                "translations": [{"translation": "rationarium", "gender": "n"}],
                 "text": "* Latin: {{tt|la|rationarium|n}}"
             },
             {
