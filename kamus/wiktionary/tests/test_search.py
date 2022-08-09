@@ -53,7 +53,18 @@ class SearchTests(unittest.TestCase):
                 "language_code": "cmn",
                 "translations": [{"translation": "你好", "transcription": "nǐ hǎo"}],
                 "text": "*: Mandarin: {{tt+|cmn|你好|tr=nǐ hǎo}}",
+            },
+            {
+                "language_code": "ca",
+                "translations": [{"translation": "passar-ho bé", "alternatives": [{'translation': 'passa-ho bé'}], "qualifier": "informal"}, {'translation': 'somethingelse'}],
+                "text": "* Catalan: {{t|ca|passar-ho bé|alt=passa-ho bé}} {{q|informal}}, {{t|ca|somethingelse}}",
+            },
+            {
+                "language_code": "nl",
+                "translations": [{'translation': 'doei', "qualifier": "informal"}],
+                "text": "* Dutch: {{t+|nl|doei}} {{qualifier|informal}}",
             }
+
         ]
 
         for param in test_params:
