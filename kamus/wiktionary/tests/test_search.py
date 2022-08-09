@@ -86,6 +86,20 @@ class SearchTests(unittest.TestCase):
         * Catalan: {{t+|ca|adéu}}
         {{trans-bottom}}something more""",
                 "senses": [{'also': ['goodbye'], 'endpos': 118, 'sense': 'short greeting', 'startpos': 18}]
+            },
+            {
+                "text": """blah blah
+        {{trans-top-also|short greeting|goodbye|somethingelse}}
+        * Catalan: {{t+|ca|adéu}}
+        {{trans-bottom}}something more""",
+                "senses": [{'also': ['goodbye', 'somethingelse'], 'endpos': 132, 'sense': 'short greeting', 'startpos': 18}]
+            },
+            {
+        "text": """blah blah
+                {{trans-top-see|short greeting|goodbye|somethingelse}}
+                * Catalan: {{t+|ca|adéu}}
+                {{trans-bottom}}something more""",
+                "senses": [{'also': ['goodbye', 'somethingelse'], 'endpos': 155, 'sense': 'short greeting', 'startpos': 26}]
             }
         ]
 

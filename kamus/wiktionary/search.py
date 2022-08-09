@@ -54,20 +54,25 @@ def get_translation(language_code, text):
 def get_senses(text):
     result = []
 
-    for trans_top in re.finditer(r"{{trans-top(-also)?\|(.+)}}", text):
+    # trans-top: https://en.wiktionary.org/wiki/Template:trans-top
+    # trans-top-also: https://en.wiktionary.org/wiki/Template:trans-top-also
+    # trans-top-see: https://en.wiktionary.org/wiki/Template:trans-see
+    #                TODO: implement for trans-top-see no gloss (only "also...")
+
+    for trans_top in re.finditer(r"{{trans-top(?P<also>-also)?(?P<see>-see)?\|(?P<parameters>.+)}}", text):
         trans_bottom = re.search(r"{{trans-bottom}}", text[trans_top.start():])
 
         if trans_bottom is None:
             # TODO: log, Wiktionary page broken
             continue
 
-        senses = trans_top.group(2).split("|")
+        parameters = trans_top.group("parameters").split("|")
 
-        main_sense = senses[0]
+        main_sense = parameters[0]
 
         also = {}
-        if len(senses) > 1:
-            also["also"] = senses[1:]
+        if len(parameters) > 1:
+            also["also"] = parameters[1:]
 
         result.append({"sense": main_sense, **also, "startpos": trans_top.start(),
                                  "endpos": trans_top.start() + trans_bottom.end()})
