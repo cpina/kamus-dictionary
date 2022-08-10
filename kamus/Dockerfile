@@ -3,7 +3,8 @@ ENV PYTHONBUFFERED 1
 RUN mkdir /code
 COPY requirements.txt entrypoint.sh tools/wait-for-mysql.sh /code/
 
-RUN apt-get update && apt-get install --no-install-recommends --yes \
+RUN apt-get -y update && apt-get -y dist-upgrade && \
+	apt-get install --no-install-recommends --yes \
 	python3-pip \
 	libmariadb-dev libpython3-dev gcc \
 	mariadb-client # to check if mariadb server is available \
