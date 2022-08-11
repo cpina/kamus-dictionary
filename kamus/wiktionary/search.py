@@ -8,11 +8,15 @@ class Config:
             {
                 "header_translation_table": r"{{trans-top(?P<also>-also)?(?P<see>-see)?\|(?P<parameters>.+)}}",
                 "footer_translation_table": r"{{trans-bottom}}",
+                "tt_before_word": r" ?{{tt?\+?\|",
+                "tt_after_word":  r"\|(?P<translation>.+?)}} ?",
             },
         "ca":
             {
                 "header_translation_table": r"{{inici\|(?P<parameters>.*)}}",
                 "footer_translation_table": r"{{final}}",
+                "tt_before_word": r"{{trad\|",
+                "tt_after_word": r"\|(?P<translation>.+?)}} ?",
             }
     }
 
@@ -38,7 +42,7 @@ class WordInformation:
         for sense in result["senses"]:
             translations_section = self._text[sense["startpos"]:sense["endpos"]]
 
-            if (translations := self._get_translation(self._to_lang, translations_section)) is not None:
+            if (translations := self._get_translation(self._from_lang, self._to_lang, translations_section)) is not None:
                 sense["translations"] = translations
 
         # sorts the translations to have the ones without a translation at the bottom
@@ -85,13 +89,13 @@ class WordInformation:
         return translation
 
     @classmethod
-    def _get_translation(cls, to_lang, table_text):
+    def _get_translation(cls, from_lang, to_lang, table_text):
         # To find in text: : '* Basque: {{tt+|eu|kaixo}}
         #                     * Catalan: {{tt+|ca|hola}}'
         qualifier_pre = r"({{q(ualifier)?\|(?P<qualifier_pre>.+?)}})?"
         qualifier_post = r"({{q(ualifier)?\|(?P<qualifier_post>.+?)}})?"
         translations = re.finditer(
-            qualifier_pre + r" ?{{tt?\+?\|" + to_lang + r"\|(?P<translation>.+?)}} ?" + qualifier_post, table_text)
+            qualifier_pre + Config.get_config(from_lang, "tt_before_word") + to_lang + Config.get_config(from_lang, "tt_after_word") + qualifier_post, table_text)
 
         result = []
 

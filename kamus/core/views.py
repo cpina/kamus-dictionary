@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
 
 from core.forms import SearchForm
-from core.models import Language
+from core.models import Language, WordWithTranslation
 from wiktionary.search import get_word_information
 
 def get_languages_config(session):
@@ -33,7 +33,12 @@ class Translate(TemplateView):
 
         assert search_form.is_valid()
 
-        word = search_form.cleaned_data["word"].word
+        if isinstance(search_form.cleaned_data["word"], WordWithTranslation):
+            word = search_form.cleaned_data["word"].word
+        else:
+            # It didn't come from the autocomplete box
+            word = search_form.cleaned_data["word"]
+
         source = search_form.cleaned_data["from"]
         to = search_form.cleaned_data["to"].code
 

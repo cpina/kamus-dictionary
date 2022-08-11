@@ -8,79 +8,98 @@ class SearchTests(unittest.TestCase):
         test_params = [
             {
                 "language_code": "ca",
+                "from_lang": "en",
                 "text": "* Basque: {{tt+|eu|kaixo}}\n* Catalan: {{tt+|ca|hola}}",
                 "translations": [{"translation": "hola"}],
             },
             {
                 "language_code": "abs",
+                "from_lang": "en",
                 "text": "* Ambonese Malay: {{tt|abs|wai}}",
                 "translations": [{"translation": "wai"}],
             },
             {
                 "language_code": "ca",
+                "from_lang": "en",
                 "text": "* Catalan: {{tt+|ca|digui}}, {{tt+|ca|si}}, {{tt+|ca|hola}}, {{tt|ca|mani'm}}",
                 "translations": [{"translation": "digui"}, {"translation": "si"}, {"translation": "hola"},
                                  {"translation": "mani'm"}],
             },
             {
                 "language_code": "ca",
+                "from_lang": "en",
                 "text": "* Catalan: {{tt+|ca|digui}}, {{tt+|ca|si}}, {{tt+|ca|hola}}, {{tt|ca|mani'm}}",
                 "translations": [{"translation": "digui"}, {"translation": "si"}, {"translation": "hola"},
                                  {"translation": "mani'm"}],
             },
             {
                 "language_code": "ca",
+                "from_lang": "en",
                 "text": "* Catalan: {{tt+|ca|hola|alt=hola?}}, {{tt|ca|na maria?}}",
                 "translations": [{"translation": "hola", "alternatives": [{"translation": "hola?"}]},
                                  {"translation": "na maria?"}],
             },
             {
                 "language_code": "ca",
+                "from_lang": "en",
                 "translations": [{"translation": "radiador", "gender": "m"}],
                 "text": "* Catalan: {{t+|ca|radiador|m}}"
             },
             {
                 "language_code": "ca",
+                "from_lang": "en",
                 "translations": [{"translation": "pilotes", "gender": "f", "number": "p"}],
                 "text": "* Catalan: {{t+|ca|pilotes|f-p}}"
             },
             {
                 "language_code": "la",
+                "from_lang": "en",
                 "translations": [{"translation": "rationarium", "gender": "n"}],
                 "text": "* Latin: {{tt|la|rationarium|n}}"
             },
             {
                 "language_code": "cmn",
+                "from_lang": "en",
                 "translations": [{"translation": "你好", "transcription": "nǐ hǎo"}],
                 "text": "*: Mandarin: {{tt+|cmn|你好|tr=nǐ hǎo}}",
             },
             {
                 "language_code": "ca",
+                "from_lang": "en",
                 "translations": [{"translation": "passar-ho bé", "alternatives": [{'translation': 'passa-ho bé'}],
                                   "qualifier": "informal"}, {'translation': 'somethingelse'}],
                 "text": "* Catalan: {{t|ca|passar-ho bé|alt=passa-ho bé}} {{q|informal}}, {{t|ca|somethingelse}}",
             },
             {
                 "language_code": "nl",
+                "from_lang": "en",
                 "translations": [{'translation': 'doei', "qualifier": "informal"}],
                 "text": "* Dutch: {{t+|nl|doei}} {{qualifier|informal}}",
             },
             {
                 "language_code": "hu",
+                "from_lang": "en",
                 "translations": [{'translation': 'agyő', 'qualifier': 'dated'}],
                 "text": "* Hungarian: {{q|dated}} {{t|hu|agyő}}",
             },
             {
                 "language_code": "hu",
+                "from_lang": "en",
                 "translations": [{'translation': 'agyő', 'qualifier': 'dated'}],
                 "text": "* Hungarian: {{qualifier|dated}} {{t|hu|agyő}}",
+            },
+            {
+                "language_code": "es",
+                "from_lang": "ca",
+                "translations": [{'translation': 'mesa'}],
+                "text": "* {{es}}: {{trad|es|mesa}}",
             }
         ]
 
         for param in test_params:
             with self.subTest(params=param):
                 self.assertEqual(param["translations"],
-                                 WordInformation._get_translation(param["language_code"], param["text"]))
+                                 WordInformation._get_translation(param["from_lang"], param["language_code"], param["text"]))
 
     def test_get_senses(self):
         test_params = [
