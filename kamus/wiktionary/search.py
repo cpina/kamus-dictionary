@@ -14,7 +14,7 @@ class Config:
             },
         "ca":
             {
-                "header_translation_table": r"{{inici\|(?P<parameters>.*)}}",
+                "header_translation_table": r"{{inici\|?(?P<parameters>.*)}}",
                 "footer_translation_table": r"{{final}}",
                 "tt_before_word": r"{{trad\|",
                 "tt_after_word": r"\|(?P<translation>.+?)}} ?",

@@ -99,7 +99,8 @@ class SearchTests(unittest.TestCase):
         for param in test_params:
             with self.subTest(params=param):
                 self.assertEqual(param["translations"],
-                                 WordInformation._get_translation(param["from_lang"], param["language_code"], param["text"]))
+                                 WordInformation._get_translation(param["from_lang"], param["language_code"],
+                                                                  param["text"]))
 
     def test_get_senses(self):
         test_params = [
@@ -161,8 +162,20 @@ class SearchTests(unittest.TestCase):
                 {{final}}
                 blah blah""",
                 "from_lang": "ca",
-                "senses": [{"sense": "Moble", "startpos": 53, "endpos": 138}, {"sense": "Matriu de files i columnes", "startpos": 156, "endpos": 265}]
+                "senses": [{"sense": "Moble", "startpos": 53, "endpos": 138},
+                           {"sense": "Matriu de files i columnes", "startpos": 156, "endpos": 265}]
+            },
+            {
+                "text": """blah blah
+            {{inici}}
+            something
+            {{final}}
+            something else
+            """,
+            "from_lang": "ca",
+            "senses": [{"sense": "", "startpos": 22, "endpos": 75}]
             }
+
         ]
 
         for param in test_params:
