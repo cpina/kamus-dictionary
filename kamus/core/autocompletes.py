@@ -1,3 +1,5 @@
+import json
+
 from dal import autocomplete
 
 from .models import Language, WordWithTranslation
@@ -22,7 +24,13 @@ class WordWithTranslationAutocomplete(autocomplete.Select2QuerySetView):
         return word_with_translation.word
 
     def get_queryset(self):
+        forwarded_values = self.request.GET["forward"]
+        forwarded_values = json.loads(forwarded_values)
+        from_language = Language.objects.get(code=forwarded_values["from"])
+
         qs = WordWithTranslation.objects.all()
+
+        qs = qs.filter(language=from_language)
 
         if self.q:
             qs = qs.filter(word__istartswith=self.q)

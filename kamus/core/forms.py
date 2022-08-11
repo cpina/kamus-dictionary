@@ -66,7 +66,7 @@ class SearchForm(forms.Form):
         # self.fields["word"] = forms.CharField(label="Word")
         self.fields["word"] = CaseSensitiveModelChoiceField(label="Word",
                                                      queryset=WordWithTranslation.objects.all().order_by("word"),
-                                                     widget=ModelSelect2Bootstrap5("autocomplete-word-with-translation", attrs={"data-minimum-input-length": 2}),
+                                                     widget=ModelSelect2Bootstrap5("autocomplete-word-with-translation", forward=["from"],  attrs={"data-minimum-input-length": 2}),
                                                      to_field_name="word",
                                                      )
 
