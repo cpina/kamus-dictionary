@@ -1,14 +1,12 @@
 import subprocess
 import time
-from pathlib import Path
 
-import MySQLdb
-import django.db.utils
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from lxml import etree
 
 from core.models import Language, WordWithTranslation
+from wiktionary.search import Config
 
 
 class Command(BaseCommand):
@@ -30,11 +28,19 @@ def open_wiktionary(file_path):
 def language_from_file_path(file_path):
     file_name = file_path.split("/")[-1]
 
-    if file_name.startswith("enwiktionary-"):
-        return Language.objects.get(code="en")
-    else:
+    language_code = file_name[0:2]
+
+    try:
+        return Language.objects.get(code=language_code)
+    except Language.DoesNotExist:
         raise NotImplemented(f"Filename handling for {file_name} not implemented")
 
+def has_translation_table(from_lang, entry):
+    for translation_table_tag in Config.get_config(from_lang, "translation_tables"):
+        if translation_table_tag in entry:
+            return True
+
+    return False
 
 @transaction.atomic
 def import_words(file_path):
@@ -45,6 +51,8 @@ def import_words(file_path):
     # inserts the words in a way slower speed).
     # (perhaps allowing duplicates is not the end of the world in this case,
     # or could be checked in memory before inserting it?)
+    # Example file: https://dumps.wikimedia.org/cawiktionary/latest/cawiktionary-latest-pages-articles.xml.bz2
+
 
     language = language_from_file_path(file_path)
 
@@ -69,7 +77,7 @@ def import_words(file_path):
             title = elem.text
 
         if event == "end" and tag == "text":
-            if elem.text is not None and "{{trans-top|" in elem.text:
+            if elem.text is not None and has_translation_table(language.code, elem.text):
                 # The word is translated: add it to the table
                 if len(title) > 100:
                     print("Too long title:", title)

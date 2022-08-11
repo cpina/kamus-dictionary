@@ -10,6 +10,7 @@ class Config:
                 "footer_translation_table": r"{{trans-bottom}}",
                 "tt_before_word": r" ?{{tt?\+?\|",
                 "tt_after_word":  r"\|(?P<translation>.+?)}} ?",
+                "translation_tables": ["{{trans-top|", "{{see translation subpage"]
             },
         "ca":
             {
@@ -17,6 +18,7 @@ class Config:
                 "footer_translation_table": r"{{final}}",
                 "tt_before_word": r"{{trad\|",
                 "tt_after_word": r"\|(?P<translation>.+?)}} ?",
+                "translation_tables": ["{{-trad-}}"]
             }
     }
 
