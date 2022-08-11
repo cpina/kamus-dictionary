@@ -39,18 +39,19 @@ class Translate(TemplateView):
             # It didn't come from the autocomplete box
             word = search_form.cleaned_data["word"]
 
-        source = search_form.cleaned_data["from"]
-        to = search_form.cleaned_data["to"].code
+        from_language = search_form.cleaned_data["from"]
+        to_language = search_form.cleaned_data["to"].code
 
-        self.request.session["source"] = source
-        self.request.session["to"] = to
+        self.request.session["from"] = from_language
+        self.request.session["to"] = to_language
+        self.request.session.save()
 
         context["word"] = word
-        context["translations"] = get_word_information(source, to, word)
+        context["translations"] = get_word_information(from_language, to_language, word)
 
         url_parameters_without_word = self.request.GET.copy()
         del url_parameters_without_word["word"]
         context["base_link_to_word"] = "?" + url_parameters_without_word.urlencode()
-        context["search"] = SearchForm(initial=get_languages_config(self.request.session))
+        context["search"] = SearchForm(initial={"from": from_language, "to": to_language})
 
         return context
