@@ -56,7 +56,8 @@ class SearchTests(unittest.TestCase):
             },
             {
                 "language_code": "ca",
-                "translations": [{"translation": "passar-ho bé", "alternatives": [{'translation': 'passa-ho bé'}], "qualifier": "informal"}, {'translation': 'somethingelse'}],
+                "translations": [{"translation": "passar-ho bé", "alternatives": [{'translation': 'passa-ho bé'}],
+                                  "qualifier": "informal"}, {'translation': 'somethingelse'}],
                 "text": "* Catalan: {{t|ca|passar-ho bé|alt=passa-ho bé}} {{q|informal}}, {{t|ca|somethingelse}}",
             },
             {
@@ -78,7 +79,8 @@ class SearchTests(unittest.TestCase):
 
         for param in test_params:
             with self.subTest(params=param):
-                self.assertEqual(param["translations"], WordInformation._get_translation(param["language_code"], param["text"]))
+                self.assertEqual(param["translations"],
+                                 WordInformation._get_translation(param["language_code"], param["text"]))
 
     def test_get_senses(self):
         test_params = [
@@ -87,6 +89,7 @@ class SearchTests(unittest.TestCase):
 {{trans-top|short greeting}}
 * Catalan: {{t+|ca|adéu}}
 {{trans-bottom}}something more""",
+                "from_lang": "en",
                 "senses": [{'endpos': 81, 'sense': 'short greeting', 'startpos': 10}]
             },
             {
@@ -97,6 +100,7 @@ class SearchTests(unittest.TestCase):
 {{trans-top|something else}}
 * Spanish something
 {{trans-bottom}}footnote""",
+                "from_lang": "en",
                 "senses": [{'endpos': 81, 'sense': 'short greeting', 'startpos': 10},
                            {'endpos': 161, 'sense': 'something else', 'startpos': 96}]
             },
@@ -105,6 +109,7 @@ class SearchTests(unittest.TestCase):
         {{trans-top-also|short greeting|goodbye}}
         * Catalan: {{t+|ca|adéu}}
         {{trans-bottom}}something more""",
+                "from_lang": "en",
                 "senses": [{'also': ['goodbye'], 'endpos': 118, 'sense': 'short greeting', 'startpos': 18}]
             },
             {
@@ -112,18 +117,36 @@ class SearchTests(unittest.TestCase):
         {{trans-top-also|short greeting|goodbye|somethingelse}}
         * Catalan: {{t+|ca|adéu}}
         {{trans-bottom}}something more""",
-                "senses": [{'also': ['goodbye', 'somethingelse'], 'endpos': 132, 'sense': 'short greeting', 'startpos': 18}]
+                "from_lang": "en",
+                "senses": [
+                    {'also': ['goodbye', 'somethingelse'], 'endpos': 132, 'sense': 'short greeting', 'startpos': 18}]
             },
             {
-        "text": """blah blah
+                "text": """blah blah
                 {{trans-top-see|short greeting|goodbye|somethingelse}}
                 * Catalan: {{t+|ca|adéu}}
                 {{trans-bottom}}something more""",
-                "senses": [{'also': ['goodbye', 'somethingelse'], 'endpos': 155, 'sense': 'short greeting', 'startpos': 26}]
+                "from_lang": "en",
+                "senses": [
+                    {'also': ['goodbye', 'somethingelse'], 'endpos': 155, 'sense': 'short greeting', 'startpos': 26}]
+            },
+            {
+                "text": """blah blah
+                {{-trad-}}
+                {{inici|Moble}}
+                * {{af}}: {{trad|af|tafel}}
+                {{final}}
+
+                {{inici|Matriu de files i columnes}}
+                * {{sq}}: {{trad|sq|tabelë|f}}
+                {{final}}
+                blah blah""",
+                "from_lang": "ca",
+                "senses": [{"sense": "Moble", "startpos": 53, "endpos": 138}, {"sense": "Matriu de files i columnes", "startpos": 156, "endpos": 265}]
             }
         ]
 
         for param in test_params:
             with self.subTest(params=param):
-                word_information = WordInformation("xx", "xx", param["text"])
+                word_information = WordInformation(param["from_lang"], "xx", param["text"])
                 self.assertEqual(word_information._get_senses(), param["senses"])

@@ -2,6 +2,28 @@ import pywikibot
 import re
 
 
+class Config:
+    CONFIG = {
+        "en":
+            {
+                "header_translation_table": r"{{trans-top(?P<also>-also)?(?P<see>-see)?\|(?P<parameters>.+)}}",
+                "footer_translation_table": r"{{trans-bottom}}",
+            },
+        "ca":
+            {
+                "header_translation_table": r"{{inici\|(?P<parameters>.*)}}",
+                "footer_translation_table": r"{{final}}",
+            }
+    }
+
+    @classmethod
+    def get_config(cls, from_lang, parameter):
+        if from_lang not in cls.CONFIG.keys():
+            raise NotImplementedError(f"{from_lang} not implemented")
+
+        return cls.CONFIG[from_lang].get(parameter, cls.CONFIG["en"][parameter])
+
+
 class WordInformation:
     def __init__(self, from_lang, to_lang, text):
         self._from_lang = from_lang
@@ -26,7 +48,8 @@ class WordInformation:
 
     @staticmethod
     def _get_information_from_translation(translation_macro):
-        m = re.search(r"(?P<word>.+?)\|(?P<gender>[mfn])?-?(?P<number>[ps])?-?(tr=(?P<transcription>.+))?", translation_macro)
+        m = re.search(r"(?P<word>.+?)\|(?P<gender>[mfn])?-?(?P<number>[ps])?-?(tr=(?P<transcription>.+))?",
+                      translation_macro)
 
         if m is not None:
             translation = {"translation": m.group("word")}
@@ -54,7 +77,8 @@ class WordInformation:
 
         m = re.search(r"(.+?)\|alt=(.+)$", translation_text)
         if m is not None:
-            translation = {**cls._get_information_from_translation(m.group(1)), "alternatives": [{"translation": m.group(2)}]}
+            translation = {**cls._get_information_from_translation(m.group(1)),
+                           "alternatives": [{"translation": m.group(2)}]}
         else:
             translation = {**cls._get_information_from_translation(translation_text)}
 
@@ -66,7 +90,8 @@ class WordInformation:
         #                     * Catalan: {{tt+|ca|hola}}'
         qualifier_pre = r"({{q(ualifier)?\|(?P<qualifier_pre>.+?)}})?"
         qualifier_post = r"({{q(ualifier)?\|(?P<qualifier_post>.+?)}})?"
-        translations = re.finditer(qualifier_pre + r" ?{{tt?\+?\|" + to_lang + r"\|(?P<translation>.+?)}} ?" + qualifier_post, table_text)
+        translations = re.finditer(
+            qualifier_pre + r" ?{{tt?\+?\|" + to_lang + r"\|(?P<translation>.+?)}} ?" + qualifier_post, table_text)
 
         result = []
 
@@ -88,14 +113,24 @@ class WordInformation:
 
     def _get_senses(self):
         result = []
+        # Finds the senses of the word in self._text
+        # For example:
+        #
+        #    ====Translations====
+        #    {{trans-top|item of furniture}}
+        #    {{multitrans|data=
+        #    * Afrikaans: {{tt|af|tafel}}
+        # Returns a dictionary with the senses (Item of furniture) and the
+        # beginning an
 
         # trans-top: https://en.wiktionary.org/wiki/Template:trans-top
         # trans-top-also: https://en.wiktionary.org/wiki/Template:trans-top-also
         # trans-top-see: https://en.wiktionary.org/wiki/Template:trans-see
         #                TODO: implement for trans-top-see no gloss (only "also...")
 
-        for trans_top in re.finditer(r"{{trans-top(?P<also>-also)?(?P<see>-see)?\|(?P<parameters>.+)}}", self._text):
-            trans_bottom = re.search(r"{{trans-bottom}}", self._text[trans_top.start():])
+        for trans_top in re.finditer(Config.get_config(self._from_lang, "header_translation_table"), self._text):
+            trans_bottom = re.search(Config.get_config(self._from_lang, "footer_translation_table"),
+                                     self._text[trans_top.start():])
 
             if trans_bottom is None:
                 # TODO: log, Wiktionary page broken
@@ -110,10 +145,9 @@ class WordInformation:
                 also["also"] = parameters[1:]
 
             result.append({"sense": main_sense, **also, "startpos": trans_top.start(),
-                                     "endpos": trans_top.start() + trans_bottom.end()})
+                           "endpos": trans_top.start() + trans_bottom.end()})
 
         return result
-
 
 
 def get_word_information(from_lang, to_lang, word):
@@ -126,7 +160,6 @@ def get_word_information(from_lang, to_lang, word):
     word_information = WordInformation(from_lang, to_lang, text)
 
     result = word_information.get_word_information()
-
 
     result["source"] = page.full_url()
 
