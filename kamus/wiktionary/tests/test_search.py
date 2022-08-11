@@ -1,6 +1,6 @@
 import unittest
 
-from wiktionary.search import get_translation, get_senses
+from wiktionary.search import WordInformation
 
 
 class SearchTests(unittest.TestCase):
@@ -78,7 +78,7 @@ class SearchTests(unittest.TestCase):
 
         for param in test_params:
             with self.subTest(params=param):
-                self.assertEqual(param["translations"], get_translation(param["language_code"], param["text"]))
+                self.assertEqual(param["translations"], WordInformation._get_translation(param["language_code"], param["text"]))
 
     def test_get_senses(self):
         test_params = [
@@ -125,4 +125,4 @@ class SearchTests(unittest.TestCase):
 
         for param in test_params:
             with self.subTest(params=param):
-                self.assertEqual(get_senses(param["text"]), param["senses"])
+                self.assertEqual(WordInformation._get_senses(param["text"]), param["senses"])

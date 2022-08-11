@@ -4,7 +4,7 @@
 # to extract the pages that contain "trans-top"
 
 from lxml import etree
-from search import get_translation
+from search import _get_translation
 
 f = open("/home/carles/wiktionary/enwiktionary-20220801-pages-articles.xml", "rb")
 

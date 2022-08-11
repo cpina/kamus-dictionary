@@ -2,7 +2,7 @@ from django.views.generic import TemplateView
 
 from core.forms import SearchForm
 from core.models import Language
-from wiktionary.search import search
+from wiktionary.search import get_word_information
 
 def get_languages_config(session):
     return {"from": session.get("from", "en"),
@@ -41,7 +41,7 @@ class Translate(TemplateView):
         self.request.session["to"] = to
 
         context["word"] = word
-        context["translations"] = search(source, to, word)
+        context["translations"] = get_word_information(source, to, word)
 
         url_parameters_without_word = self.request.GET.copy()
         del url_parameters_without_word["word"]
