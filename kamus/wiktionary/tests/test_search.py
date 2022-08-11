@@ -125,4 +125,5 @@ class SearchTests(unittest.TestCase):
 
         for param in test_params:
             with self.subTest(params=param):
-                self.assertEqual(WordInformation._get_senses(param["text"]), param["senses"])
+                word_information = WordInformation("xx", "xx", param["text"])
+                self.assertEqual(word_information._get_senses(), param["senses"])

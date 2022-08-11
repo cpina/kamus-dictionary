@@ -11,7 +11,7 @@ class WordInformation:
     def get_word_information(self):
         result = {}
 
-        result["senses"] = self._get_senses(self._text)
+        result["senses"] = self._get_senses()
 
         for sense in result["senses"]:
             translations_section = self._text[sense["startpos"]:sense["endpos"]]
@@ -79,15 +79,14 @@ class WordInformation:
                 translation_dictionary["qualifier"] = translation.group("qualifier_post")
 
             if translation.group("qualifier_pre"):
-                # It assumes that qualifier_pre and post does not exist. Never seen it
+                # It assumes that qualifier_pre and post does not exist. Never seen both of them
                 translation_dictionary["qualifier"] = translation.group("qualifier_pre")
 
             result.append(translation_dictionary)
 
         return result
 
-    @classmethod
-    def _get_senses(cls, entry_text):
+    def _get_senses(self):
         result = []
 
         # trans-top: https://en.wiktionary.org/wiki/Template:trans-top
@@ -95,8 +94,8 @@ class WordInformation:
         # trans-top-see: https://en.wiktionary.org/wiki/Template:trans-see
         #                TODO: implement for trans-top-see no gloss (only "also...")
 
-        for trans_top in re.finditer(r"{{trans-top(?P<also>-also)?(?P<see>-see)?\|(?P<parameters>.+)}}", entry_text):
-            trans_bottom = re.search(r"{{trans-bottom}}", entry_text[trans_top.start():])
+        for trans_top in re.finditer(r"{{trans-top(?P<also>-also)?(?P<see>-see)?\|(?P<parameters>.+)}}", self._text):
+            trans_bottom = re.search(r"{{trans-bottom}}", self._text[trans_top.start():])
 
             if trans_bottom is None:
                 # TODO: log, Wiktionary page broken
