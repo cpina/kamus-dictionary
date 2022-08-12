@@ -206,7 +206,7 @@ class WordInformation:
             result.append(r)
 
 
-        result.sort(key=lambda t: "translations" in t and len(t["translations"]) == 0)
+        result.sort(key=lambda t: "translations" in t and len(t["translations"]) > 0, reverse=True)
 
         return result
 
