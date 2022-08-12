@@ -157,6 +157,19 @@ class SearchTests(unittest.TestCase):
                     {'also': ['goodbye', 'somethingelse'], 'endpos': 155, 'sense': 'short greeting', 'startpos': 26}]
             },
             {
+                "text":
+                    """
+                    blah blah
+                    {{trans-see|something else}}
+                    note that no trans-bottom for this one.
+                    {{trans-top|type of fruit}}
+                    """,
+                "from_lang": "en",
+                "senses": [
+                    {"see": ["something else"], "startpos": 51, "endpos": 130},
+                    ],
+            },
+            {
                 "text": """blah blah
                 {{-trad-}}
                 {{inici|Moble}}

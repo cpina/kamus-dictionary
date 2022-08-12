@@ -7,21 +7,26 @@
     <h1>{{ word }}</h1>
 
     {% for sense in translations.senses %}
-        {{ sense.sense }}{% include "kamus/_also.html" with also=sense.also base_link_to_word=base_link_to_word only %}
-        <ul>
-            {% for translation in sense.translations %}
-                <li>{% include "kamus/_translation.html" with translation=translation only %}
-                {% for alternative in translation.alternatives %}
-                    {% if forloop.first %}
-                        <i>Alternatives: </i>
-                    {% endif %}
-                    {{ alternative.translation }}
+        {% if sense.see %}
+            {% include "kamus/_see.html" with see=sense.see only %}
+            <p></p>
+        {% else %}
+            {{ sense.sense }}{% include "kamus/_also.html" with also=sense.also base_link_to_word=base_link_to_word only %}
+            <ul>
+                {% for translation in sense.translations %}
+                    <li>{% include "kamus/_translation.html" with translation=translation only %}
+                    {% for alternative in translation.alternatives %}
+                        {% if forloop.first %}
+                            <i>Alternatives: </i>
+                        {% endif %}
+                        {{ alternative.translation }}
+                    {% endfor %}
+                    </li>
+                {% empty %}
+                    <li><i>No translation available for this sense</i></li>
                 {% endfor %}
-                </li>
-            {% empty %}
-                <li><i>No translation available for this sense</i></li>
-            {% endfor %}
-        </ul>
+            </ul>
+        {% endif %}
     {% endfor %}
 
     <p>

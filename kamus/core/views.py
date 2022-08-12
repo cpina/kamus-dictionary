@@ -1,3 +1,4 @@
+from django.urls import reverse
 from django.views.generic import TemplateView
 
 from core.forms import SearchForm
@@ -23,8 +24,22 @@ class Homepage(TemplateView):
 class Information(TemplateView):
     template_name = "kamus/information.html"
 
+
 class Translate(TemplateView):
     template_name = "kamus/translation.html"
+
+    def _add_urls(self, senses):
+        for sense in senses["senses"]:
+            if "see" in sense:
+                for sense_information in sense["see"]:
+                    sense_information["url"] = self._link_to_word(sense_information["word"])
+
+    def _link_to_word(self, word):
+        url_parameters = self.request.GET.copy()
+        url_parameters["word"] = word
+
+        return reverse("translate") + "?" + url_parameters.urlencode()
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -51,7 +66,10 @@ class Translate(TemplateView):
 
         url_parameters_without_word = self.request.GET.copy()
         del url_parameters_without_word["word"]
+
         context["base_link_to_word"] = "?" + url_parameters_without_word.urlencode()
         context["search"] = SearchForm(initial={"from": from_language, "to": to_language})
+
+        self._add_urls(context["translations"])
 
         return context

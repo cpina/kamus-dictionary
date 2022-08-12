@@ -166,7 +166,17 @@ class WordInformation:
         # trans-top: https://en.wiktionary.org/wiki/Template:trans-top
         # trans-top-also: https://en.wiktionary.org/wiki/Template:trans-top-also
         # trans-top-see: https://en.wiktionary.org/wiki/Template:trans-see
+        # trans-see: it only referes to "see this other thing" (no translations)
         #                TODO: implement for trans-top-see no gloss (only "also...")
+
+        # TODO: move to the configuration
+        if self._from_lang == "en":
+            for trans_see in re.finditer(r"{{trans-see\|(?P<word>.+)?}}", self._text):
+                word = trans_see.group("word")
+
+                url = f"https://{self._from_lang}.wiktionary.org/wiki/{word}"
+                result.append({"see": [{"word": word}], "startpos": trans_see.start(),"endpos": trans_see.start() + trans_see.end()})
+
 
         for trans_top in re.finditer(Config.get_config(self._from_lang, "header_translation_table"), self._text):
             trans_bottom = re.search(Config.get_config(self._from_lang, "footer_translation_table"),
