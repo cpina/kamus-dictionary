@@ -167,7 +167,7 @@ class WordInformation:
             for trans_see in re.finditer(r"{{trans-see\|(?P<word>.+)?}}", self._text):
                 word = trans_see.group("word")
 
-                result.append({"see": [{"word": word}], "startpos": trans_see.start(),"endpos": trans_see.start() + trans_see.end()})
+                result.append({"see": [{"word": word}]})
 
             for translation_subpage in re.finditer(r"{{see translation subpage\|?(?P<category>.+)?}}", self._text):
                 category = translation_subpage.group("category")
@@ -197,8 +197,7 @@ class WordInformation:
 
             translations = self._get_translation(self._from_lang, self._to_lang, translations_section)
 
-            r = {"sense": main_sense, **also,
-                           "startpos": trans_top.start(), "endpos": trans_top.start() + trans_bottom.end()}
+            r = {"sense": main_sense, **also}
 
             if len(translations) > 0:
                 r["translations"] = translations

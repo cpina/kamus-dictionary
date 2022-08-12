@@ -116,7 +116,7 @@ class SearchTests(unittest.TestCase):
 * Catalan: {{t+|ca|adéu}}
 {{trans-bottom}}something more""",
                 "from_lang": "en",
-                "senses": [{'endpos': 81, 'sense': 'short greeting', 'startpos': 10}]
+                "senses": [{'sense': 'short greeting'}]
             },
             {
                 "text": """blah blah
@@ -127,8 +127,8 @@ class SearchTests(unittest.TestCase):
 * Spanish something
 {{trans-bottom}}footnote""",
                 "from_lang": "en",
-                "senses": [{'endpos': 81, 'sense': 'short greeting', 'startpos': 10},
-                           {'endpos': 161, 'sense': 'something else', 'startpos': 96}]
+                "senses": [{'sense': 'short greeting'},
+                           {'sense': 'something else'}]
             },
             {
                 "text": """blah blah
@@ -136,7 +136,7 @@ class SearchTests(unittest.TestCase):
         * Catalan: {{t+|ca|adéu}}
         {{trans-bottom}}something more""",
                 "from_lang": "en",
-                "senses": [{'also': ['goodbye'], 'endpos': 118, 'sense': 'short greeting', 'startpos': 18}]
+                "senses": [{'also': ['goodbye'], 'sense': 'short greeting'}]
             },
             {
                 "text": """blah blah
@@ -145,7 +145,7 @@ class SearchTests(unittest.TestCase):
         {{trans-bottom}}something more""",
                 "from_lang": "en",
                 "senses": [
-                    {'also': ['goodbye', 'somethingelse'], 'endpos': 132, 'sense': 'short greeting', 'startpos': 18}]
+                    {'also': ['goodbye', 'somethingelse'], 'sense': 'short greeting'}]
             },
             {
                 "text": """blah blah
@@ -154,7 +154,7 @@ class SearchTests(unittest.TestCase):
                 {{trans-bottom}}something more""",
                 "from_lang": "en",
                 "senses": [
-                    {'also': ['goodbye', 'somethingelse'], 'endpos': 155, 'sense': 'short greeting', 'startpos': 26}]
+                    {'also': ['goodbye', 'somethingelse'], 'sense': 'short greeting'}]
             },
             {
                 "text":
@@ -166,7 +166,7 @@ class SearchTests(unittest.TestCase):
                     """,
                 "from_lang": "en",
                 "senses": [
-                    {"see": [{"word": "something else"}], "startpos": 51, "endpos": 130},
+                    {"see": [{"word": "something else"}]},
                     ],
             },
             {
@@ -181,8 +181,8 @@ class SearchTests(unittest.TestCase):
                 {{final}}
                 blah blah""",
                 "from_lang": "ca",
-                "senses": [{"sense": "Moble", "startpos": 53, "endpos": 138},
-                           {"sense": "Matriu de files i columnes", "startpos": 156, "endpos": 265}]
+                "senses": [{"sense": "Moble"},
+                           {"sense": "Matriu de files i columnes"}]
             },
             {
                 "text": """blah blah
@@ -192,7 +192,7 @@ class SearchTests(unittest.TestCase):
             something else
             """,
             "from_lang": "ca",
-            "senses": [{"sense": "", "startpos": 22, "endpos": 75}]
+            "senses": [{"sense": ""}]
             },
             {
                 "text": """blah blah
@@ -201,7 +201,7 @@ class SearchTests(unittest.TestCase):
             {{trad-abajo}}
             """,
             "from_lang": "es",
-            "senses": [{"sense": "mueble", "startpos": 24, "endpos": 99}]
+            "senses": [{"sense": "mueble"}]
             }
 
         ]
