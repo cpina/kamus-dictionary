@@ -1,7 +1,7 @@
 from dal import autocomplete
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Div, Submit
+from crispy_forms.layout import Layout, Div, Submit, HTML
 from django import forms
 from django.core.exceptions import ValidationError
 
@@ -16,7 +16,8 @@ class ModelSelect2Bootstrap5(autocomplete.ModelSelect2):
                 'admin/js/vendor/select2/select2.full.js',
                 'autocomplete_light/autocomplete_light.js',
                 'autocomplete_light/select2.js',
-                'js/enable-select2-bootstrap5-theme.js', # added
+                'js/setup-autocomplete.js', # added
+                'js/swap-from-to.js',
             ),
             css={
                 'screen': (
@@ -77,8 +78,9 @@ class SearchForm(forms.Form):
         self.helper.layout = Layout(
             Div(
                 Div("from", css_class="col-3"),
+                Div(HTML('{% include "_arrow.html" %}'), css_class="col-1"),
                 Div("to", css_class="col-3"),
-                Div("word", css_class="col-6"),
+                Div("word", css_class="col-5"),
                 css_class="row"
             ),
             FormActions(

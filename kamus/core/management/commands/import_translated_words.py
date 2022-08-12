@@ -83,9 +83,12 @@ def import_words(file_path):
                     print("Too long title:", title)
                 elif title in added_words:
                     print("Duplicated word:", title)
+                elif title.endswith("/translations"):
+                    print("Subpage:", title)
                 else:
                     WordWithTranslation.objects.create(word=title, language=language)
-                    added_words.add(title)
+                    # Save memory
+                    # added_words.add(title)
                     counter += 1
 
                     if counter % 1000 == 0:
