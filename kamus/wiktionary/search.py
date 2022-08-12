@@ -10,7 +10,7 @@ class Config:
                 "footer_translation_table": r"{{trans-bottom}}",
                 "tt_before_word": r" ?{{tt?\+?\|",
                 "tt_after_word":  r"\|(?P<translation>.+?)}} ?",
-                "translation_tables": ["{{trans-top|", "{{see translation subpage"]
+                "translation_tables": ["{{trans-top|", "{{see translation subpage|"]
             },
         "ca":
             {
@@ -38,7 +38,8 @@ class Config:
 
 
 class WordInformation:
-    def __init__(self, from_lang, to_lang, text):
+    def __init__(self, word, from_lang, to_lang, text):
+        self._word = word
         self._from_lang = from_lang
         self._to_lang = to_lang
         self._text = text
@@ -48,14 +49,6 @@ class WordInformation:
 
         result["senses"] = self._get_senses()
 
-        for sense in result["senses"]:
-            translations_section = self._text[sense["startpos"]:sense["endpos"]]
-
-            if (translations := self._get_translation(self._from_lang, self._to_lang, translations_section)) is not None:
-                sense["translations"] = translations
-
-        # sorts the translations to have the ones without a translation at the bottom
-        result["senses"].sort(key=lambda t: len(t["translations"]) == 0)
 
         return result
 
@@ -174,9 +167,12 @@ class WordInformation:
             for trans_see in re.finditer(r"{{trans-see\|(?P<word>.+)?}}", self._text):
                 word = trans_see.group("word")
 
-                url = f"https://{self._from_lang}.wiktionary.org/wiki/{word}"
                 result.append({"see": [{"word": word}], "startpos": trans_see.start(),"endpos": trans_see.start() + trans_see.end()})
 
+            for translation_subpage in re.finditer(r"{{see translation subpage\|?(?P<category>.+)?}}", self._text):
+                category = translation_subpage.group("category")
+                subpage_information = get_word_information(self._from_lang, self._to_lang, f"{self._word}/translations")
+                result.extend(subpage_information["senses"])
 
         for trans_top in re.finditer(Config.get_config(self._from_lang, "header_translation_table"), self._text):
             trans_bottom = re.search(Config.get_config(self._from_lang, "footer_translation_table"),
@@ -194,8 +190,23 @@ class WordInformation:
             if len(parameters) > 1:
                 also["also"] = parameters[1:]
 
-            result.append({"sense": main_sense, **also, "startpos": trans_top.start(),
-                           "endpos": trans_top.start() + trans_bottom.end()})
+            startpos = trans_top.start()
+            endpos = startpos + trans_bottom.end()
+
+            translations_section = self._text[startpos:endpos]
+
+            translations = self._get_translation(self._from_lang, self._to_lang, translations_section)
+
+            r = {"sense": main_sense, **also,
+                           "startpos": trans_top.start(), "endpos": trans_top.start() + trans_bottom.end()}
+
+            if len(translations) > 0:
+                r["translations"] = translations
+
+            result.append(r)
+
+
+        result.sort(key=lambda t: "translations" in t and len(t["translations"]) == 0)
 
         return result
 
@@ -207,7 +218,10 @@ def get_word_information(from_lang, to_lang, word):
 
     text = page.text
 
-    word_information = WordInformation(from_lang, to_lang, text)
+    if word.endswith("/translations"):
+        word = word.split("/")[0]
+
+    word_information = WordInformation(word, from_lang, to_lang, text)
 
     result = word_information.get_word_information()
 

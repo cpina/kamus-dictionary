@@ -166,7 +166,7 @@ class SearchTests(unittest.TestCase):
                     """,
                 "from_lang": "en",
                 "senses": [
-                    {"see": ["something else"], "startpos": 51, "endpos": 130},
+                    {"see": [{"word": "something else"}], "startpos": 51, "endpos": 130},
                     ],
             },
             {
@@ -208,5 +208,5 @@ class SearchTests(unittest.TestCase):
 
         for param in test_params:
             with self.subTest(params=param):
-                word_information = WordInformation(param["from_lang"], "xx", param["text"])
+                word_information = WordInformation("some_word", param["from_lang"], "xx", param["text"])
                 self.assertEqual(word_information._get_senses(), param["senses"])
