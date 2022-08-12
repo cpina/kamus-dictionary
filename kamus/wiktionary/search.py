@@ -19,7 +19,14 @@ class Config:
                 "tt_before_word": r"{{trad\|",
                 "tt_after_word": r"\|(?P<translation>.+?)}} ?",
                 "translation_tables": ["{{-trad-}}"]
-            }
+            },
+        "es":
+            {
+                "header_translation_table": r"{{trad-arriba\|?(\[[0-9]+ ?\])?(?P<parameters>.*)}}",
+                "footer_translation_table": r"{{trad-abajo}}",
+                "translation_tables": ["{{trad-arriba"],
+                "tt_before_word": r" ?{{tt?\+?\|",
+            },
     }
 
     @classmethod
@@ -144,7 +151,7 @@ class WordInformation:
 
             parameters = trans_top.group("parameters").split("|")
 
-            main_sense = parameters[0]
+            main_sense = parameters[0].strip()
 
             also = {}
             if len(parameters) > 1:

@@ -174,6 +174,15 @@ class SearchTests(unittest.TestCase):
             """,
             "from_lang": "ca",
             "senses": [{"sense": "", "startpos": 22, "endpos": 75}]
+            },
+            {
+                "text": """blah blah
+            {{{{trad-arriba|[1] mueble}}
+            something
+            {{trad-abajo}}
+            """,
+            "from_lang": "es",
+            "senses": [{"sense": "mueble", "startpos": 24, "endpos": 99}]
             }
 
         ]
