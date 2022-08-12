@@ -228,6 +228,16 @@ class SearchTests(unittest.TestCase):
                     """,
                 "from_lang": "es",
                 "senses": [{"sense": "mueble"}]
+            },
+            {
+                "text":
+                    """
+                    {{trans-top|id=Q283|clear liquid H₂O}}
+                    something
+                    {{trans-bottom}}
+                    """,
+                "from_lang": "en",
+                "senses": [{'sense': 'clear liquid H₂O'}]
             }
         ]
 

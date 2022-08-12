@@ -188,6 +188,9 @@ class WordInformation:
 
             parameters = trans_top.group("parameters").split("|")
 
+            # some items had an id=XXX that we are not interested in
+            parameters = list(filter(lambda x: not x.startswith("id="), parameters))
+
             main_sense = parameters[0].strip()
 
             also = {}
