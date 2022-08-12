@@ -7,7 +7,7 @@ RUN apt-get -y update && apt-get -y dist-upgrade && \
 	apt-get install --no-install-recommends --yes \
 	python3-pip \
 	libmariadb-dev libpython3-dev gcc \
-	mariadb-client # to check if mariadb server is available \
+	mariadb-client \
 	curl bzip2
 RUN pip3 install -r /code/requirements.txt
 RUN apt-get purge -y libmariadbclient-dev libmariadb-dev-compat \
