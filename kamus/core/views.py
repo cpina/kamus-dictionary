@@ -1,3 +1,5 @@
+from urllib.parse import unquote
+
 from django.urls import reverse
 from django.views.generic import TemplateView
 
@@ -69,6 +71,8 @@ class Translate(TemplateView):
 
         context["base_link_to_word"] = "?" + url_parameters_without_word.urlencode()
         context["search"] = SearchForm(initial={"from": from_language, "to": to_language})
+
+        context["translations"]["source_decoded"] = unquote(context["translations"]["source"])
 
         self._add_urls(context["translations"])
 
