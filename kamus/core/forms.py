@@ -78,7 +78,7 @@ class SearchForm(forms.Form):
         self.helper.layout = Layout(
             Div(
                 Div("from", css_class="col-3"),
-                Div(HTML('{% include "_arrow.html" %}'), css_class="col-1"),
+                Div(HTML('{% include "_arrow.html" %}'), css_class="col-auto"),
                 Div("to", css_class="col-3"),
                 Div("word", css_class="col-5"),
                 css_class="row"
