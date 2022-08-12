@@ -169,9 +169,13 @@ class WordInformation:
         # TODO: move to the configuration
         if self._from_lang == "en":
             for trans_see in re.finditer(r"{{trans-see\|(?P<word>.+)?}}", self._text):
-                word = trans_see.group("word")
+                words = trans_see.group("word").split("|")
 
-                result.append({"see": [{"word": word}]})
+                sees = []
+                for word in words:
+                    sees.append({"word": word})
+
+                result.append({"see": sees})
 
             for translation_subpage in re.finditer(r"{{see translation subpage\|?(?P<category>.+)?}}", self._text):
                 category = translation_subpage.group("category")

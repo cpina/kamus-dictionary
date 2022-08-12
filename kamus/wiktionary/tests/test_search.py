@@ -190,6 +190,17 @@ class SearchTests(unittest.TestCase):
                 "text":
                     """
                     blah blah
+                    {{trans-see|to break wind|break wind}}
+                    note that no trans-bottom for this one.
+                    {{trans-top|type of fruit}}
+                    """,
+                "from_lang": "en",
+                "senses": [{"see": [{"word": "to break wind"}, {"word": "break wind"}]}]
+            },
+            {
+                "text":
+                    """
+                    blah blah
                     {{-trad-}}
                     {{inici|Moble}}
                     * {{af}}: {{trad|af|tafel}}
