@@ -99,6 +99,12 @@ class SearchTests(unittest.TestCase):
                 "from_lang": "es",
                 "translations": [{'translation': 'hello', 'alternatives': [{'translation': 'hi'}]}],
                 "text": "{{t+|en|1|hello|,|hi}}",
+            },
+            {
+                "language_code": "ja",
+                "from_lang": "en",
+                "translations": [{'transcription': 'maji?', 'translation': 'マジ？'}],
+                "text": "{{tt|ja|[[マジ]]？|tr=maji?}}"
             }
         ]
 

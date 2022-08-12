@@ -84,7 +84,11 @@ class WordInformation:
                       translation_macro)
 
         if m is not None:
-            translation = {"translation": m.group("word")}
+            translated_word = m.group("word")
+            translated_word = translated_word.replace("[[", "").replace("]]", "")
+
+            translation = {"translation": translated_word}
+
 
             if m.group("gender"):
                 translation["gender"] = m.group("gender")
