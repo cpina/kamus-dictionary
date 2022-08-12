@@ -59,8 +59,34 @@ class WordInformation:
 
         return result
 
-    @staticmethod
-    def _get_information_from_translation(translation_macro):
+    @classmethod
+    def _cleanup_macro(cls, from_lang, translation_macro):
+        # Move this to the Config ?
+        if from_lang == "es":
+            from_lang_list = translation_macro.split("|")
+
+            from_lang_list_clean = []
+
+            main_translation = True
+
+            for item in from_lang_list:
+                if item == ",":
+                    continue
+                elif re.match("[0-9]+", item):
+                    continue
+
+                if main_translation:
+                    from_lang_list_clean.append(item)
+                else:
+                    from_lang_list_clean.append(f"alt={item}")
+                main_translation = False
+
+            return "|".join(from_lang_list_clean)
+
+        return translation_macro
+
+    @classmethod
+    def _get_information_from_translation(cls, from_lang, translation_macro):
         m = re.search(r"(?P<word>.+?)\|(?P<gender>[mfn])?-?(?P<number>[ps])?-?(tr=(?P<transcription>.+))?",
                       translation_macro)
 
@@ -81,19 +107,20 @@ class WordInformation:
         return translation
 
     @classmethod
-    def _translation_text_to_dictionary(cls, translation_text):
+    def _translation_text_to_dictionary(cls, from_lang, translation_text):
         """
         From hola|m returns {"translation": "hola", "gender": "m"}
         From hola|m returns {"translation": "hola", "gender": "m"}
         # From hola|alt=hola? returns {"translation": "hola", "alternatives": [{"translation": "hola"}]
         """
+        translation_text = cls._cleanup_macro(from_lang, translation_text)
 
         m = re.search(r"(.+?)\|alt=(.+)$", translation_text)
         if m is not None:
-            translation = {**cls._get_information_from_translation(m.group(1)),
+            translation = {**cls._get_information_from_translation(from_lang, m.group(1)),
                            "alternatives": [{"translation": m.group(2)}]}
         else:
-            translation = {**cls._get_information_from_translation(translation_text)}
+            translation = {**cls._get_information_from_translation(from_lang, translation_text)}
 
         return translation
 
@@ -111,7 +138,7 @@ class WordInformation:
         for translation in translations:
             translation_text = translation.group("translation")
 
-            translation_dictionary = cls._translation_text_to_dictionary(translation_text)
+            translation_dictionary = cls._translation_text_to_dictionary(from_lang, translation_text)
 
             if translation.group("qualifier_post"):
                 translation_dictionary["qualifier"] = translation.group("qualifier_post")

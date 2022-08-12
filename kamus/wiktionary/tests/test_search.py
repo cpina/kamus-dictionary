@@ -93,6 +93,12 @@ class SearchTests(unittest.TestCase):
                 "from_lang": "ca",
                 "translations": [{'translation': 'mesa'}],
                 "text": "* {{es}}: {{trad|es|mesa}}",
+            },
+            {
+                "language_code": "en",
+                "from_lang": "es",
+                "translations": [{'translation': 'hello', 'alternatives': [{'translation': 'hi'}]}],
+                "text": "{{t+|en|1|hello|,|hi}}",
             }
         ]
 
