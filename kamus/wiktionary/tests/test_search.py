@@ -111,50 +111,63 @@ class SearchTests(unittest.TestCase):
     def test_get_senses(self):
         test_params = [
             {
-                "text": """blah blah
-{{trans-top|short greeting}}
-* Catalan: {{t+|ca|adéu}}
-{{trans-bottom}}something more""",
+                "text":
+                    """
+                    blah blah
+                    {{trans-top|short greeting}}
+                    * Catalan: {{t+|ca|adéu}}
+                    {{trans-bottom}}something more
+                    """,
                 "from_lang": "en",
                 "senses": [{'sense': 'short greeting'}]
             },
             {
-                "text": """blah blah
-{{trans-top|short greeting}}
-* Catalan: {{t+|ca|adéu}}
-{{trans-bottom}}something more
-{{trans-top|something else}}
-* Spanish something
-{{trans-bottom}}footnote""",
+                "text":
+                    """
+                    blah blah
+                    {{trans-top|short greeting}}
+                    * Catalan: {{t+|ca|adéu}}
+                    {{trans-bottom}}something more
+                    {{trans-top|something else}}
+                    * Spanish something
+                    {{trans-bottom}}footnote
+                    """,
                 "from_lang": "en",
                 "senses": [{'sense': 'short greeting'},
                            {'sense': 'something else'}]
             },
             {
-                "text": """blah blah
-        {{trans-top-also|short greeting|goodbye}}
-        * Catalan: {{t+|ca|adéu}}
-        {{trans-bottom}}something more""",
+                "text":
+                    """
+                    blah blah
+                    {{trans-top-also|short greeting|goodbye}}
+                    * Catalan: {{t+|ca|adéu}}
+                    {{trans-bottom}}something more
+                    """,
                 "from_lang": "en",
                 "senses": [{'also': ['goodbye'], 'sense': 'short greeting'}]
             },
             {
-                "text": """blah blah
-        {{trans-top-also|short greeting|goodbye|somethingelse}}
-        * Catalan: {{t+|ca|adéu}}
-        {{trans-bottom}}something more""",
+                "text":
+                    """"
+                    blah blah
+                    {{trans-top-also|short greeting|goodbye|somethingelse}}
+                    * Catalan: {{t+|ca|adéu}}
+                    {{trans-bottom}}something more
+                    """,
                 "from_lang": "en",
-                "senses": [
-                    {'also': ['goodbye', 'somethingelse'], 'sense': 'short greeting'}]
+                "senses": [{'also': ['goodbye', 'somethingelse'], 'sense': 'short greeting'}]
             },
             {
-                "text": """blah blah
-                {{trans-top-see|short greeting|goodbye|somethingelse}}
-                * Catalan: {{t+|ca|adéu}}
-                {{trans-bottom}}something more""",
-                "from_lang": "en",
-                "senses": [
-                    {'also': ['goodbye', 'somethingelse'], 'sense': 'short greeting'}]
+                "text":
+                    """
+                    blah blah
+                    {{trans-top-see|short greeting|goodbye|somethingelse}}
+                    * Catalan: {{t+|ca|adéu}}
+                    {{trans-bottom}}something more
+                    """,
+                    "from_lang": "en",
+                    "senses": [{'also': ['goodbye', 'somethingelse'], 'sense': 'short greeting'}]
             },
             {
                 "text":
@@ -165,45 +178,51 @@ class SearchTests(unittest.TestCase):
                     {{trans-top|type of fruit}}
                     """,
                 "from_lang": "en",
-                "senses": [
-                    {"see": [{"word": "something else"}]},
-                    ],
+                "senses": [{"see": [{"word": "something else"}]}],
             },
             {
-                "text": """blah blah
-                {{-trad-}}
-                {{inici|Moble}}
-                * {{af}}: {{trad|af|tafel}}
-                {{final}}
+                "text":
+                    """
+                    blah blah
+                    {{-trad-}}
+                    {{inici|Moble}}
+                    * {{af}}: {{trad|af|tafel}}
+                    {{final}}
 
-                {{inici|Matriu de files i columnes}}
-                * {{sq}}: {{trad|sq|tabelë|f}}
-                {{final}}
-                blah blah""",
+                    {{inici|Matriu de files i columnes}}
+                    * {{sq}}: {{trad|sq|tabelë|f}}
+                    {{final}}
+                    blah blah
+                    """,
+                    "from_lang": "ca",
+                    "senses": [
+                        {"sense": "Moble"},
+                        {"sense": "Matriu de files i columnes"}
+                    ]
+            },
+            {
+                "text":
+                    """
+                    blah blah
+                    {{inici}}
+                    something
+                    {{final}}
+                    something else
+                    """,
                 "from_lang": "ca",
-                "senses": [{"sense": "Moble"},
-                           {"sense": "Matriu de files i columnes"}]
+                "senses": [{"sense": ""}]
             },
             {
-                "text": """blah blah
-            {{inici}}
-            something
-            {{final}}
-            something else
-            """,
-            "from_lang": "ca",
-            "senses": [{"sense": ""}]
-            },
-            {
-                "text": """blah blah
-            {{{{trad-arriba|[1] mueble}}
-            something
-            {{trad-abajo}}
-            """,
-            "from_lang": "es",
-            "senses": [{"sense": "mueble"}]
+                "text":
+                    """
+                    blah blah
+                    {{{{trad-arriba|[1] mueble}}
+                    something
+                    {{trad-abajo}}
+                    """,
+                "from_lang": "es",
+                "senses": [{"sense": "mueble"}]
             }
-
         ]
 
         for param in test_params:
