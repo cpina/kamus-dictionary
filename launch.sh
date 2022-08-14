@@ -1,6 +1,17 @@
 #!/bin/bash
 
-docker-compose build --no-cache --pull && (docker-compose down ; docker-compose up -d)
+set -eu
+
+arg_1=${1:-}
+
+if [ "$arg_1" = "--quick" ]
+then
+	docker_compose_options=""
+else
+	docker_compose_options="--no-cache --pull"
+fi
+
+docker-compose build $docker_compose_options && (docker-compose down ; docker-compose up -d)
 
 echo
 echo "See logs:"
