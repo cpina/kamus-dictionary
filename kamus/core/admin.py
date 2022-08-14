@@ -14,9 +14,9 @@ class WordWithTranslationAdmin(admin.ModelAdmin):
     ordering = ("word", "language",)
 
 class ImportedAdmin(admin.ModelAdmin):
-    search_fields = ("language", "file_path", "file_created_on", "file_size")
-    list_display = ("language", "file_path", "file_created_on", "file_size")
-    ordering = ("language", "file_path", "file_created_on", "file_size")
+    search_fields = ("language", "imported_on", "translated_words", "total_words", "file_path", "file_created_on", "file_size")
+    list_display = ("language", "imported_on", "translated_words", "total_words", "file_path", "file_created_on", "file_size")
+    ordering = ("language", "imported_on", "translated_words", "total_words", "file_path", "file_created_on", "file_size")
 
 
 admin.site.register(models.Language, LanguageAdmin)
