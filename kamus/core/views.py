@@ -1,16 +1,19 @@
 from urllib.parse import unquote
 
+from django.db.models import Max, F
 from django.urls import reverse
 from django.views.generic import TemplateView
 
 from core.forms import SearchForm
-from core.models import Language, WordWithTranslation
+from core.models import Language, WordWithTranslation, Import
 from wiktionary.search import get_word_information
+
 
 def get_languages_config(session):
     return {"from": session.get("from", "en"),
             "to": session.get("to", None)
             }
+
 
 class Homepage(TemplateView):
     template_name = "kamus/homepage.html"
@@ -19,12 +22,32 @@ class Homepage(TemplateView):
         context = super().get_context_data(**kwargs)
 
         context["search"] = SearchForm(initial=get_languages_config(self.request.session))
-        # context["search"] = SearchForm()
 
         return context
 
+
 class Information(TemplateView):
     template_name = "kamus/information.html"
+
+
+class Imports(TemplateView):
+    template_name = "kamus/imports.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        imports = []
+        for language_dict in Import.objects.values("language__name").distinct():
+            language_name = language_dict["language__name"]
+            latest_import = Import.objects.filter(language__name=language_name).order_by("imported_on").first()
+
+            imports.append({"language_name": language_name,
+                            "file_created_on": latest_import.file_created_on,
+                            "translated_words": latest_import.translated_words})
+
+        context["imports"] = imports
+
+        return context
 
 
 class Translate(TemplateView):
@@ -41,7 +64,6 @@ class Translate(TemplateView):
         url_parameters["word"] = word
 
         return reverse("translate") + "?" + url_parameters.urlencode()
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -1,0 +1,54 @@
+{% extends "kamus/_base.html" %}
+
+{% block title %}Imports{% endblock %}
+
+{% block contents %}
+    <h1>Imports</h1>
+    <p>
+        The list for the autocomplete is imported from Wiktionary's dump files that can be found in the <a
+            href="https://dumps.wikimedia.org/">Wikimedia Downloads</a>.
+    </p>
+    <p>
+        Wikimedia generates these files twice a month. Kamus imports them automatically and should be the next 30 hours
+        of Wikimedia's publication.
+    </p>
+    <p>
+        Not all the words of a Wiktionary are listed in the autocompletion. Only words that have a "translation table"
+        are listed. This is to avoid listing words that exist in a language dictionary but are, likely, very incomplete
+        or words from another language. For example the English Wiktionary has words other language that Kamus should
+        not display when translating from English (e.g. "<a href="https://en.wiktionary.org/wiki/taula">taula</a>" in
+        the English Wiktionary to explain the Basque, Catalan, Finish and Occitan words).
+    </p>
+
+    <h2>Summary of the latest imports</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Language</th>
+            <th scope="col">Latest import</th>
+            <th scope="col">Words with a translation</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for import in imports %}
+            <tr>
+                <td>
+                    {{ import.language_name }}
+                </td>
+                <td>
+                    {{ import.file_created_on }}
+                </td>
+                <td>
+                    {{ import.translated_words }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    "Words with a translation" mean that the word has a translation table. It might be empty (rare) or might have
+    a translation to only some languages. For example, the translations of
+    <a href="https://en.wiktionary.org/wiki/idempotent#Translations">idempotent</a> does not
+    currently contain a translation for French. The word "idempotent" will be counted in "words with a translation"
+    but a user translating from English to French will not find a translation (but will find an English definition).
+{% endblock %}
