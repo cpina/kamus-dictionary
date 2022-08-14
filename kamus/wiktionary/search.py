@@ -47,9 +47,7 @@ class WordInformation:
     def get_word_information(self):
         result = {}
 
-        senses, sources = self._get_senses()
-        result["senses"] = senses
-        result["sources"] = sources
+        result = self._get_senses()
 
         return result
 
@@ -224,7 +222,7 @@ class WordInformation:
 
         result.sort(key=lambda t: "translations" in t and len(t["translations"]) > 0, reverse=True)
 
-        return result, sources
+        return {"senses": result, "sources": sources}
 
 
 def get_word_information(from_lang, to_lang, word):
