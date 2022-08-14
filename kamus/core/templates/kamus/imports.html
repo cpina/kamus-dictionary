@@ -5,19 +5,18 @@
 {% block contents %}
     <h1>Imports</h1>
     <p>
-        The list for the autocomplete is imported from Wiktionary's dump files that can be found in the <a
+        The list for the autocomplete word search is imported from Wiktionary's dump files that can be found in the <a
             href="https://dumps.wikimedia.org/">Wikimedia Downloads</a>.
     </p>
     <p>
-        Wikimedia generates these files twice a month. Kamus imports them automatically and should be the next 30 hours
-        of Wikimedia's publication.
+        Wikimedia generates these files twice a month. Kamus then imports them automatically within 30 hours.
     </p>
     <p>
-        Not all the words of a Wiktionary are listed in the autocompletion. Only words that have a "translation table"
-        are listed. This is to avoid listing words that exist in a language dictionary but are, likely, very incomplete
-        or words from another language. For example the English Wiktionary has words other language that Kamus should
-        not display when translating from English (e.g. "<a href="https://en.wiktionary.org/wiki/taula">taula</a>" in
-        the English Wiktionary to explain the Basque, Catalan, Finish and Occitan words).
+        Not all the words in Wiktionary are listed in the autocomplete list. Only words that have a "translation table"
+        are listed. This is to avoid words from another language, or listing words that exist in a language dictionary 
+        but are, likely, very incomplete. For example, the English Wiktionary has words that Kamus should not display in
+        the autocomplete when translating from English (e.g. "<a href="https://en.wiktionary.org/wiki/taula">taula</a>", 
+        which is in the English Wiktionary as a translation of the word table in Basque, Catalan, Finish and Occitan).
     </p>
 
     <h2>Summary of the latest imports</h2>
@@ -47,15 +46,14 @@
         </tbody>
     </table>
     <p>
-        "Words with a translation" are pages that contain a translation table. It might be empty (rare) or might have
-        a translation to only some languages. For example, the translations of
-        <a href="https://en.wiktionary.org/wiki/idempotent#Translations">idempotent</a> do not
-        currently contain a translation for French. The word "idempotent" will be counted in "words with a translation"
-        but a user translating from English to French will not find a translation (but will find an English definition).
+        "Words with a translation" are pages on Wiktionary that contain a translation table. This table might be empty 
+        (rare) or might have a translation to only a few languages. For example, the translations of
+        <a href="https://en.wiktionary.org/wiki/idempotent#Translations">idempotent</a> do not currently contain a 
+        translation for French. The word "idempotent" will be counted in "words with a translation" but a user translating
+        from English to French will not find a translation (but they will find an English definition).
     </p>
     <p>
-        The actual translations are fetched from Wiktionary when needed by Kamus. If the
-        content of the Wiktionary page is updated with a new sense or translation it should be reflected in Kamus
-        straight away.
+        The actual translations are fetched from Wiktionary when they are needed by Kamus. If the content of the Wiktionary
+        page is updated with a new sense or translation it should be reflected in Kamus straight away.
     </p>
 {% endblock %}
