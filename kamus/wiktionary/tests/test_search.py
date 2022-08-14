@@ -14,7 +14,6 @@ class SearchTests(unittest.TestCase):
                                   "alternatives": [{"translation": "leap"}, {"translation": "spring"},
                                                    {"translation": "hop"}]}],
             },
-
             {
                 "language_code": "ca",
                 "from_lang": "en",

@@ -1,7 +1,9 @@
 from urllib.parse import unquote
 
-from django.db.models import Max, F
+from django.contrib import messages
+from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.views import View
 from django.views.generic import TemplateView
 
 from core.forms import SearchForm
@@ -61,9 +63,7 @@ class Imports(TemplateView):
         return context
 
 
-class Translate(TemplateView):
-    template_name = "kamus/translation.html"
-
+class Translate(View):
     def _add_urls(self, senses):
         for sense in senses["senses"]:
             if "see" in sense:
@@ -76,12 +76,14 @@ class Translate(TemplateView):
 
         return reverse("translate") + "?" + url_parameters.urlencode()
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
+    def get(self, request, *args, **kwargs):
         search_form = SearchForm(self.request.GET)
 
-        assert search_form.is_valid()
+        is_valid = search_form.is_valid()
+
+        if is_valid == False:
+            messages.error(self.request, "Invalid parameters - please try again or get in touch")
+            return redirect("homepage")
 
         if isinstance(search_form.cleaned_data["word"], WordWithTranslation):
             word = search_form.cleaned_data["word"].word
@@ -96,6 +98,7 @@ class Translate(TemplateView):
         self.request.session["to"] = to_language
         self.request.session.save()
 
+        context = {}
         context["word"] = word
         context["translations"] = get_word_information(from_language, to_language, word)
 
@@ -115,4 +118,4 @@ class Translate(TemplateView):
 
         self._add_urls(context["translations"])
 
-        return context
+        return render(self.request, "kamus/translation.html", context)
