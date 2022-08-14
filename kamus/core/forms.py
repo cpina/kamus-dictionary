@@ -61,7 +61,6 @@ class SearchForm(forms.Form):
         self.fields["from"] = forms.CharField(label="From", widget=forms.Select(choices=FROM_LANGUAGES.items()))
         self.fields["to"] = forms.ModelChoiceField(label="To",
                                                    queryset=Language.objects.all().order_by("name"),
-                                                   # widget=autocomplete.ModelSelect2("autocomplete-languages"),
                                                    to_field_name="code",
                                                    )
         # self.fields["word"] = forms.CharField(label="Word")

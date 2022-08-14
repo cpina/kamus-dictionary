@@ -9,10 +9,21 @@ from core.models import Language, WordWithTranslation, Import
 from wiktionary.search import get_word_information
 
 
-def get_languages_config(session):
-    return {"from": session.get("from", "en"),
+def get_languages_config(session, query_dict=None):
+    result = {"from": session.get("from", "en"),
             "to": session.get("to", None)
             }
+
+    # if there is a query_dict it has higher priouty
+
+    if query_dict is not None:
+        if "from" in query_dict:
+            result["from"] = query_dict["from"]
+
+        if "to" in query_dict:
+            result["to"] = query_dict["to"]
+
+    return query_dict
 
 
 class Homepage(TemplateView):
@@ -21,7 +32,7 @@ class Homepage(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["search"] = SearchForm(initial=get_languages_config(self.request.session))
+        context["search"] = SearchForm(initial=get_languages_config(self.request.session, self.request.GET))
 
         return context
 
