@@ -47,15 +47,15 @@
         </tbody>
     </table>
     <p>
-        "Words with a translation" mean that the word has a translation table. It might be empty (rare) or might have
+        "Words with a translation" are pages that contain a translation table. It might be empty (rare) or might have
         a translation to only some languages. For example, the translations of
-        <a href="https://en.wiktionary.org/wiki/idempotent#Translations">idempotent</a> does not
+        <a href="https://en.wiktionary.org/wiki/idempotent#Translations">idempotent</a> do not
         currently contain a translation for French. The word "idempotent" will be counted in "words with a translation"
         but a user translating from English to French will not find a translation (but will find an English definition).
     </p>
     <p>
-        The actual translation of the words is fetched from Wiktionary instead of being saved in the database. If the
-        content of the Wiktionary page is updated with a new sesne or translation should be reflected in Kamus straight
-        away.
+        The actual translations are fetched from Wiktionary when needed by Kamus. If the
+        content of the Wiktionary page is updated with a new sense or translation it should be reflected in Kamus
+        straight away.
     </p>
 {% endblock %}
