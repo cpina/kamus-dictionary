@@ -11,7 +11,7 @@ from wiktionary.search import get_word_information
 
 def get_languages_config(session, query_dict=None):
     result = {"from": session.get("from", "en"),
-            "to": session.get("to", None)
+                "to": session.get("to", None)
             }
 
     # if there is a query_dict it has higher priouty
@@ -23,7 +23,7 @@ def get_languages_config(session, query_dict=None):
         if "to" in query_dict:
             result["to"] = query_dict["to"]
 
-    return query_dict
+    return result
 
 
 class Homepage(TemplateView):
