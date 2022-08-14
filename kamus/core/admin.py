@@ -13,7 +13,12 @@ class WordWithTranslationAdmin(admin.ModelAdmin):
     list_display = ("word", "language",)
     ordering = ("word", "language",)
 
+class ImportedAdmin(admin.ModelAdmin):
+    search_fields = ("language", "file_path", "file_created_on", "file_size")
+    list_display = ("language", "file_path", "file_created_on", "file_size")
+    ordering = ("language", "file_path", "file_created_on", "file_size")
 
 
 admin.site.register(models.Language, LanguageAdmin)
 admin.site.register(models.WordWithTranslation, WordWithTranslationAdmin)
+admin.site.register(models.Import, ImportedAdmin)

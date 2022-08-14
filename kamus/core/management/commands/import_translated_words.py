@@ -1,32 +1,42 @@
+import datetime
+import re
 import subprocess
 import time
 
+from pathlib import Path
+import requests
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from lxml import etree
 
-from core.models import Language, WordWithTranslation
+from core.models import Language, WordWithTranslation, Import
 from wiktionary.search import Config
+from django.utils import timezone
 
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
-        parser.add_argument("filename", type=str, help="https:// or local file")
+        parser.add_argument("directory", type=str, help="https:// or local directory")
+        parser.add_argument("language_code", type=str, help="E.g. 'en', 'es' or 'ca'")
 
     def handle(self, *args, **options):
-        import_words(options["filename"])
-
+        import_words(options["directory"], options["language_code"])
 
 
 def open_wiktionary(file_path):
-    if file_path.startswith("https://"):
-        result = subprocess.Popen(["bash", "-c", f"curl {file_path} | bunzip2"], stdout=subprocess.PIPE)
-        return result.stdout
-    else:
-        return open(file_path, "rb")
+    if not file_path.startswith("https://"):
+        file_path = f"file://{file_path}"
+
+    result = subprocess.Popen(["bash", "-c", f"curl {file_path} | bzcat"], stdout=subprocess.PIPE)
+    return result.stdout
+
+
+def filename_from_file_path(file_path):
+    return file_path.split("/")[-1]
+
 
 def language_from_file_path(file_path):
-    file_name = file_path.split("/")[-1]
+    file_name = filename_from_file_path(file_path)
 
     language_code = file_name[0:2]
 
@@ -35,6 +45,7 @@ def language_from_file_path(file_path):
     except Language.DoesNotExist:
         raise NotImplemented(f"Filename handling for {file_name} not implemented")
 
+
 def has_translation_table(from_lang, entry):
     for translation_table_tag in Config.get_config(from_lang, "translation_tables"):
         if translation_table_tag in entry:
@@ -42,8 +53,43 @@ def has_translation_table(from_lang, entry):
 
     return False
 
+
+def get_latest_file_information(directory, language_code):
+    result = {}
+
+    file_name = f"{language_code}wiktionary-latest-pages-articles.xml.bz2"
+
+    if directory.startswith("https://"):
+        r = requests.get(directory)
+
+        m = re.search(
+            file_name + r"</a> +(?P<date>[0-9]{2}-.{3}-[0-9]{4}) +(?P<time>[0-9]{2}:[0-9]{2}) +(?P<size>[0-9]+)",
+            r.content.decode("utf-8"))
+
+        if m is None:
+            raise ValueError(f"Cannot find file {file_name} in {directory}")
+
+        date_time = datetime.datetime.strptime(m.group("date") + " " + m.group("time"), '%d-%b-%Y %H:%M')
+
+        result["created_on"] = date_time
+        result["size"] = int(m.group("size"))
+        result["path"] = f"{directory}/{file_name}"
+        return result
+    else:
+        file_path = Path(directory) / file_name
+
+        stat = file_path.lstat()
+
+        # Using modified time on purpose for testing
+        result["created_on"] = datetime.datetime.fromtimestamp(stat.st_mtime, tz=datetime.timezone.utc)
+        result["size"] = stat.st_size
+        result["path"] = str(file_path.absolute())
+
+        return result
+
+
 @transaction.atomic
-def import_words(file_path):
+def import_words(directory, language_code):
     # TODO: use https://docs.djangoproject.com/en/4.1/ref/models/querysets/#django.db.models.query.QuerySet.bulk_create
     # with (maybe!) "ignore_conflicts" would speed up this process.
     # In a laptop from 2013 importing all the 110K English words takes
@@ -53,18 +99,28 @@ def import_words(file_path):
     # or could be checked in memory before inserting it?)
     # Example file: https://dumps.wikimedia.org/cawiktionary/latest/cawiktionary-latest-pages-articles.xml.bz2
 
+    language = Language.objects.get(code=language_code)
+    file_information = get_latest_file_information(directory, language_code)
+    print("Will import:", file_information)
 
-    language = language_from_file_path(file_path)
+    try:
+        imported = Import.objects.get(file_path=file_information["path"],
+                                      file_created_on=file_information["created_on"],
+                                      file_size=file_information["size"])
+        raise ValueError(f"{imported.file_path} already imported on {imported.file_created_on}, aborting")
+    except Import.DoesNotExist:
+        pass
 
-    file_with_words = open_wiktionary(file_path)
+    file_with_words = open_wiktionary(file_information["path"])
 
     WordWithTranslation.objects.all().filter(language=language).delete()
 
     context = etree.iterparse(file_with_words, events=("start", "end"))
 
-    title = None
+    word = None
 
-    counter = 0
+    translated_words = 0
+    total_words = 0
 
     start_time = time.time()
 
@@ -74,28 +130,12 @@ def import_words(file_path):
         tag = etree.QName(elem.tag).localname
 
         if event == "end" and tag == "title":
-            title = elem.text
+            word = elem.text
 
         if event == "end" and tag == "text":
-            if elem.text is not None and has_translation_table(language.code, elem.text):
-                # The word is translated: add it to the table
-                if len(title) > 100:
-                    print("Too long title:", title)
-                elif title in added_words:
-                    print("Duplicated word:", title)
-                elif title.endswith("/translations"):
-                    print("Subpage:", title)
-                else:
-                    WordWithTranslation.objects.create(word=title, language=language)
-                    # Save memory
-                    # added_words.add(title)
-                    counter += 1
+            word_text = elem.text
 
-                    if counter % 1000 == 0:
-                        print("\nImported ", counter, "words")
-
-        if event == "end" and tag == "page":
-            title = None
+            total_words += 1
 
             # Keep memory usage low: delete ancestors and element
             # (found on internet)
@@ -106,5 +146,33 @@ def import_words(file_path):
             elem.clear()
             del elem
 
+            if word_text is None or not has_translation_table(language.code, word_text):
+                # Page did not have a translation
+                continue
 
-    print("Minutes to import file: ", (time.time()-start_time)/60)
+            if word in added_words:
+                print("Duplicated entry:", word)
+                continue
+
+            if len(word) > 100:
+                print("Too long word:", word)
+                continue
+
+            if word.endswith("/translations"):
+                print("Subpage:", word)
+                continue
+
+            WordWithTranslation.objects.create(word=word, language=language)
+
+            added_words.add(word)
+            translated_words += 1
+
+            if translated_words % 1000 == 0:
+                print("\nImported ", translated_words, "words")
+                print("Total number ", total_words)
+
+    print("Import time:", (time.time() - start_time) / 60, "minutes")
+    print("Imported words: ", translated_words, "of total number of words:", total_words)
+    Import.objects.create(language=language, file_path=file_information["path"], file_size=file_information["size"],
+                          file_created_on=file_information["created_on"], imported_on=timezone.now(),
+                          translated_words=translated_words, total_words=total_words)

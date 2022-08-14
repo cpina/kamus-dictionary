@@ -15,3 +15,15 @@ class WordWithTranslation(models.Model):
 
     def __str__(self):
         return f"{self.word}-{self.language}"
+
+
+class Import(models.Model):
+    language = models.ForeignKey(Language, on_delete=models.PROTECT)
+
+    file_created_on = models.DateTimeField()
+    file_size = models.IntegerField()
+    file_path = models.CharField(max_length=200)
+
+    imported_on = models.DateTimeField()
+    translated_words = models.IntegerField()
+    total_words = models.IntegerField()
