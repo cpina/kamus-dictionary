@@ -171,8 +171,10 @@ def import_words(directory, language_code):
                 print("\nImported ", translated_words, "words")
                 print("Total number ", total_words)
 
-    print("Import time:", (time.time() - start_time) / 60, "minutes")
-    print("Imported words: ", translated_words, "of total number of words:", total_words)
+    elapsed_time_minutes = (time.time() - start_time) / 60
+
+    print(f"Import time: {elapsed_time_minutes:.2f} minutes")
+    print(f"Imported words: {translated_words:,} of total number of words: {total_words:,}")
     Import.objects.create(language=language, file_path=file_information["path"], file_size=file_information["size"],
                           file_created_on=file_information["created_on"], imported_on=timezone.now(),
                           translated_words=translated_words, total_words=total_words)
