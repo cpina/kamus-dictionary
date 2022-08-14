@@ -35,17 +35,6 @@ def filename_from_file_path(file_path):
     return file_path.split("/")[-1]
 
 
-def language_from_file_path(file_path):
-    file_name = filename_from_file_path(file_path)
-
-    language_code = file_name[0:2]
-
-    try:
-        return Language.objects.get(code=language_code)
-    except Language.DoesNotExist:
-        raise NotImplemented(f"Filename handling for {file_name} not implemented")
-
-
 def has_translation_table(from_lang, entry):
     for translation_table_tag in Config.get_config(from_lang, "translation_tables"):
         if translation_table_tag in entry:
