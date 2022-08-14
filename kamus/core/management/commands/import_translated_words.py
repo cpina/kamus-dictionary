@@ -62,6 +62,9 @@ def get_latest_file_information(directory, language_code):
     if directory.startswith("https://"):
         r = requests.get(directory)
 
+        # TODO: stop regexps to fine the file and start using the machine readable version:
+        # https://dumps.wikimedia.org/enwiktionary/20220801/dumpstatus.json
+
         m = re.search(
             file_name + r"</a> +(?P<date>[0-9]{2}-.{3}-[0-9]{4}) +(?P<time>[0-9]{2}:[0-9]{2}) +(?P<size>[0-9]+)",
             r.content.decode("utf-8"))
