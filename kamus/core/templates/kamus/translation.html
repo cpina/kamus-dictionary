@@ -30,7 +30,7 @@
     {% endfor %}
 
     <p>
-        Information from: <a href="{{ translations.source }}">{{ translations.source_decoded }}</a>.<br>
+        Information from: {% include "_sources.html" with sources=translations.sources only %}.<br>
         This is a prototype: some information might be missing.
     </p>
     <hr>

@@ -105,7 +105,13 @@ class Translate(TemplateView):
         context["base_link_to_word"] = "?" + url_parameters_without_word.urlencode()
         context["search"] = SearchForm(initial={"from": from_language, "to": to_language})
 
-        context["translations"]["source_decoded"] = unquote(context["translations"]["source"])
+        new_sources = []
+        for source in context["translations"]["sources"]:
+            source_decoded = unquote(source)
+
+            new_sources.append({"url": source, "url_decoded": source_decoded})
+
+        context["translations"]["sources"] = new_sources
 
         self._add_urls(context["translations"])
 

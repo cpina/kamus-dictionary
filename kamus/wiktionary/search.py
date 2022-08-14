@@ -47,8 +47,9 @@ class WordInformation:
     def get_word_information(self):
         result = {}
 
-        result["senses"] = self._get_senses()
-
+        senses, sources = self._get_senses()
+        result["senses"] = senses
+        result["sources"] = sources
 
         return result
 
@@ -167,6 +168,10 @@ class WordInformation:
         #                TODO: implement for trans-top-see no gloss (only "also...")
 
         # TODO: move to the configuration
+
+        # If extra sources are used
+        sources = []
+
         if self._from_lang == "en":
             for trans_see in re.finditer(r"{{trans-see\|(?P<word>.+)?}}", self._text):
                 words = trans_see.group("word").split("|")
@@ -180,6 +185,7 @@ class WordInformation:
             for translation_subpage in re.finditer(r"{{see translation subpage\|?(?P<category>.+)?}}", self._text):
                 category = translation_subpage.group("category")
                 subpage_information = get_word_information(self._from_lang, self._to_lang, f"{self._word}/translations")
+                sources.extend(subpage_information["sources"])
                 result.extend(subpage_information["senses"])
 
         for trans_top in re.finditer(Config.get_config(self._from_lang, "header_translation_table"), self._text):
@@ -218,7 +224,7 @@ class WordInformation:
 
         result.sort(key=lambda t: "translations" in t and len(t["translations"]) > 0, reverse=True)
 
-        return result
+        return result, sources
 
 
 def get_word_information(from_lang, to_lang, word):
@@ -235,7 +241,7 @@ def get_word_information(from_lang, to_lang, word):
 
     result = word_information.get_word_information()
 
-    result["source"] = page.full_url()
+    result["sources"].insert(0, page.full_url())
 
     return result
 
