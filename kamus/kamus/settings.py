@@ -122,9 +122,14 @@ LANGUAGE_CODE = 'en-gb'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
+USE_I18N = False
+USE_L10N = None
 
 USE_TZ = True
+USE_THOUSAND_SEPARATOR = True
+
+DATE_FORMAT = "Y-m-d"
+DATETIME_FORMAT = "Y-m-d H:i:s"
 
 
 # Static files (CSS, JavaScript, Images)
