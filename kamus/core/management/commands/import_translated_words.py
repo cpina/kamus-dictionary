@@ -73,7 +73,7 @@ def get_latest_file_information(directory, language_code):
             raise ValueError(f"Cannot find file {file_name} in {directory}")
 
         date_time = datetime.datetime.strptime(m.group("date") + " " + m.group("time"), '%d-%b-%Y %H:%M')
-        date_time.replace(tzinfo=datetime.timezone.utc)
+        date_time = date_time.replace(tzinfo=datetime.timezone.utc)
 
         result["created_on"] = date_time
         result["size"] = int(m.group("size"))
