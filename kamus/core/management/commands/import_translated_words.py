@@ -20,7 +20,7 @@ class Command(BaseCommand):
         parser.add_argument("language_code", type=str, help="E.g. 'en', 'es' or 'ca'")
 
     def handle(self, *args, **options):
-        import_words(options["directory"], options["language_code"])
+        import_words(options["directory"], options["language_code"], self.stdout, self.stderr)
 
 
 def open_wiktionary(file_path):
@@ -82,7 +82,7 @@ def get_latest_file_information(directory, language_code):
 
 
 @transaction.atomic
-def import_words(directory, language_code):
+def import_words(directory, language_code, stdout, stderr):
     # TODO: use https://docs.djangoproject.com/en/4.1/ref/models/querysets/#django.db.models.query.QuerySet.bulk_create
     # with (maybe!) "ignore_conflicts" would speed up this process.
     # In a laptop from 2013 importing all the 110K English words takes
@@ -94,19 +94,24 @@ def import_words(directory, language_code):
 
     language = Language.objects.get(code=language_code)
     file_information = get_latest_file_information(directory, language_code)
-    print("Will import:", file_information)
+    stdout.write(f"Will start to import: {file_information}")
 
     try:
         imported = Import.objects.get(file_path=file_information["path"],
                                       file_created_on=file_information["created_on"],
                                       file_size=file_information["size"])
-        raise ValueError(f"{imported.file_path} already imported on {imported.file_created_on}, aborting")
+        stdout.write(f"{imported.file_path} already imported on {imported.file_created_on}, aborting")
+        raise SystemExit(3)
     except Import.DoesNotExist:
         pass
 
     file_with_words = open_wiktionary(file_information["path"])
 
-    WordWithTranslation.objects.all().filter(language=language).delete()
+    words_for_language = WordWithTranslation.objects.all().filter(language=language)
+    translated_words_before = words_for_language.count()
+
+    # Deletes everything. It's in a transaction, will be re-added
+    words_for_language.delete()
 
     context = etree.iterparse(file_with_words, events=("start", "end"))
 
@@ -165,6 +170,11 @@ def import_words(directory, language_code):
                 print("Total number ", total_words)
 
     elapsed_time_minutes = (time.time() - start_time) / 60
+
+    if translated_words_before != 0 and translated_words < translated_words_before * 0.7:
+        stderr.write(f"Before this import there were {translated_words_before}, "
+                     f"now {translated_words}. Aborting because the number is significantly lower")
+        raise SystemExit(3)
 
     print(f"Import time: {elapsed_time_minutes:.2f} minutes")
     print(f"Imported words: {translated_words:,} of total number of words: {total_words:,}")
