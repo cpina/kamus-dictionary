@@ -1,0 +1,1 @@
+{% for alternative in translation.alternatives %}{% if forloop.first %}<i>Alternatives: </i>{% else %}, {% endif %}{{ alternative.translation }}{% endfor %}

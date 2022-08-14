@@ -7,6 +7,15 @@ class SearchTests(unittest.TestCase):
     def test_get_translation(self):
         test_params = [
             {
+                "language_code": "en",
+                "from_lang": "es",
+                "text": "{{t+|en|jump|,|leap|,|spring|,|hop|}}",
+                "translations": [{"translation": "jump",
+                                  "alternatives": [{"translation": "leap"}, {"translation": "spring"},
+                                                   {"translation": "hop"}]}],
+            },
+
+            {
                 "language_code": "ca",
                 "from_lang": "en",
                 "text": "* Basque: {{tt+|eu|kaixo}}\n* Catalan: {{tt+|ca|hola}}",

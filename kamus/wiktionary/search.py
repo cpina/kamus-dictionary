@@ -64,6 +64,8 @@ class WordInformation:
             for item in from_lang_list:
                 if item == ",":
                     continue
+                elif item == "":
+                    continue
                 elif re.match("[0-9]+", item):
                     continue
 
@@ -111,12 +113,25 @@ class WordInformation:
         """
         translation_text = cls._cleanup_macro(from_lang, translation_text)
 
-        m = re.search(r"(.+?)\|alt=(.+)$", translation_text)
-        if m is not None:
-            translation = {**cls._get_information_from_translation(from_lang, m.group(1)),
-                           "alternatives": [{"translation": m.group(2)}]}
+        if "|alt=" in translation_text:
+            main_translation, alternatives_text = translation_text.split("|alt=", 1)
         else:
-            translation = {**cls._get_information_from_translation(from_lang, translation_text)}
+            main_translation = translation_text
+            alternatives_text = ""
+
+        translation = {**cls._get_information_from_translation(from_lang, main_translation)}
+
+        translation["alternatives"] = []
+
+        for alternative_text in alternatives_text.split("|alt="):
+            if alternative_text == "":
+                continue
+            alternative = alternative_text.removeprefix("|alt=")
+
+            translation["alternatives"].append({"translation": alternative_text})
+
+        if len(translation["alternatives"]) == 0:
+            del translation["alternatives"]
 
         return translation
 
