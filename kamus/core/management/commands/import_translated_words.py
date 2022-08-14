@@ -96,7 +96,13 @@ def import_words(file_path):
 
         if event == "end" and tag == "page":
             title = None
+
+            for ancestor in elem.xpath("ancestor-or-self::*"):
+                while ancestor.getprevious() is not None:
+                    del ancestor.getparent()[0]
+
             elem.clear()
             del elem
+
 
     print("Minutes to import file: ", (time.time()-start_time)/60)
