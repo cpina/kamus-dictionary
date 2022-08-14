@@ -24,7 +24,7 @@ gunicorn kamus.wsgi:application \
 	--workers=10 \
 	--timeout=600 \
 	--log-file=- \
-	--error-logfile=- \
-	--access-logfile=- \
+	--error-logfile=/var/log/gunicorn.err \
+	--access-logfile=/var/log/gunicorn.log \
 	--capture-output \
 	"$@"

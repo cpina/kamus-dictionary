@@ -24,6 +24,7 @@ services:
     volumes:
       - static_volume:/code/kamus/staticfiles
       - ./kamus:/code/kamus
+      - ${HOME}/docker/kamus/var/log:/var/log
     networks:
       - nginx-proxy
     restart: unless-stopped
