@@ -64,8 +64,8 @@ class Imports(TemplateView):
 
 
 class Translate(View):
-    def _add_urls(self, senses):
-        for sense in senses["senses"]:
+    def _add_urls(self, senses, key):
+        for sense in senses[key]:
             if "see" in sense:
                 for sense_information in sense["see"]:
                     sense_information["url"] = self._link_to_word(sense_information["word"])
@@ -116,6 +116,7 @@ class Translate(View):
 
         context["translations"]["sources"] = new_sources
 
-        self._add_urls(context["translations"])
+        self._add_urls(context["translations"], "translated_senses")
+        self._add_urls(context["translations"], "non_translated_senses")
 
         return render(self.request, "kamus/translation.html", context)

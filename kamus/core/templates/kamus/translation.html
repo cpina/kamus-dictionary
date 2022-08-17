@@ -6,7 +6,7 @@
 {% block contents %}
     <h1>{{ word }}</h1>
 
-    {% for sense in translations.senses %}
+    {% for sense in translations.translated_senses %}
         {% if sense.see %}
             {% include "kamus/_see.html" with see=sense.see only %}
             <p></p>
@@ -15,14 +15,25 @@
             <ul>
                 {% for translation in sense.translations %}
                     <li>{% include "kamus/_translation.html" with translation=translation only %}
-                    {% include "kamus/_alternatives.html" with alternatives=translation.alternatives %}
+                        {% include "kamus/_alternatives.html" with alternatives=translation.alternatives %}
                     </li>
-                {% empty %}
-                    <li><i>No translation available for this sense</i></li>
                 {% endfor %}
             </ul>
         {% endif %}
     {% endfor %}
+    {% if translations.non_translated_senses %}
+        Non translated senses:
+        <ul>
+            {% for sense in translations.non_translated_senses %}
+{#                TODO: Refactor with above#}
+                {% if sense.see %}
+                    <li>{% include "kamus/_see.html" with see=sense.see only %}</li>
+                {% else %}
+                    <li>{{ sense.sense }}{% include "kamus/_also.html" with also=sense.also base_link_to_word=base_link_to_word only %}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
 
     <p>
         Information from: {% include "_sources.html" with sources=translations.sources only %}.<br>

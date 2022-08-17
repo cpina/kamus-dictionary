@@ -49,6 +49,20 @@ class WordInformation:
 
         result = self._get_senses()
 
+        translated_senses = []
+        non_translated_senses = []
+
+        for sense in result["senses"]:
+            if "translations" in sense:
+                translated_senses.append(sense)
+            else:
+                non_translated_senses.append(sense)
+
+        result["translated_senses"] = translated_senses
+        result["non_translated_senses"] = non_translated_senses
+
+        del result["senses"]
+
         return result
 
     @classmethod
@@ -199,7 +213,8 @@ class WordInformation:
                 category = translation_subpage.group("category")
                 subpage_information = get_word_information(self._from_lang, self._to_lang, f"{self._word}/translations")
                 sources.extend(subpage_information["sources"])
-                result.extend(subpage_information["senses"])
+                result.extend(subpage_information["translated_senses"])
+                result.extend(subpage_information["non_translated_senses"])
 
         for trans_top in re.finditer(Config.get_config(self._from_lang, "header_translation_table"), self._text):
             trans_bottom = re.search(Config.get_config(self._from_lang, "footer_translation_table"),
@@ -233,7 +248,6 @@ class WordInformation:
                 r["translations"] = translations
 
             result.append(r)
-
 
         result.sort(key=lambda t: "translations" in t and len(t["translations"]) > 0, reverse=True)
 
