@@ -30,7 +30,10 @@ services:
     restart: unless-stopped
 
   reverse-proxy:
-    image: nginx:1.23
+    image: kamus-nginx
+    build:
+      dockerfile: Dockerfile
+      context: nginx/
     expose:
       - "80"
     environment:
@@ -39,7 +42,6 @@ services:
       - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
       - LETSENCRYPT_HOST=${KAMUS_HOST}
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - static_volume:/code/kamus/staticfiles
     links:
       - kamus
