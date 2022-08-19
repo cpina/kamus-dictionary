@@ -94,7 +94,9 @@ def import_words(directory, language_code, verbosity, stdout, stderr, ):
 
     language = Language.objects.get(code=language_code)
     file_information = get_latest_file_information(directory, language_code)
-    stdout.write(f"Will start to import: {file_information}")
+
+    if verbosity > 1:
+        stdout.write(f"Will start to import: {file_information}")
 
     try:
         imported = Import.objects.get(file_path=file_information["path"],
