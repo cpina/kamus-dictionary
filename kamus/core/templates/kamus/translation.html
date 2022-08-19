@@ -4,7 +4,10 @@
 {% block title %}{{ word }}{% endblock %}
 
 {% block contents %}
-    <h1>{{ word }}</h1>
+    <h1>Kamus dictionary</h1>
+    {% crispy search %}
+    <p></p>
+    <h2>{{ word }}</h2>
 
     {% if translations.translated_senses|length == 0 and translations.non_translated_senses|length == 0 %}
         <p>
@@ -46,6 +49,4 @@
         Information from: {% include "_sources.html" with sources=translations.sources only %}.<br>
         This is a prototype: some information might be missing.
     </p>
-    <hr>
-    {% crispy search %}
 {% endblock %}
