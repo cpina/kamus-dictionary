@@ -274,4 +274,4 @@ def get_word_information(from_lang, to_lang, word):
 
 
 if __name__ == "__main__":
-    print(get_word_information("en", "es", "table"))
+    print(get_word_information("en", "es", "asdf"))

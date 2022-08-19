@@ -18,9 +18,10 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("directory", type=str, help="https:// or local directory")
         parser.add_argument("language_code", type=str, help="E.g. 'en', 'es' or 'ca'")
+        parser.add_argument("-v", "--verbose", action="count", default="0")
 
     def handle(self, *args, **options):
-        import_words(options["directory"], options["language_code"], self.stdout, self.stderr)
+        import_words(options["directory"], options["language_code"], options["verbose"], self.stdout, self.stderr)
 
 
 def open_wiktionary(file_path):
@@ -82,7 +83,7 @@ def get_latest_file_information(directory, language_code):
 
 
 @transaction.atomic
-def import_words(directory, language_code, stdout, stderr):
+def import_words(directory, language_code, stdout, stderr, verbose):
     # TODO: use https://docs.djangoproject.com/en/4.1/ref/models/querysets/#django.db.models.query.QuerySet.bulk_create
     # with (maybe!) "ignore_conflicts" would speed up this process.
     # In a laptop from 2013 importing all the 110K English words takes
@@ -100,7 +101,8 @@ def import_words(directory, language_code, stdout, stderr):
         imported = Import.objects.get(file_path=file_information["path"],
                                       file_created_on=file_information["created_on"],
                                       file_size=file_information["size"])
-        stdout.write(f"{imported.file_path} already imported on {imported.file_created_on}, aborting")
+        if verbose > 0:
+            stdout.write(f"{imported.file_path} already imported on {imported.file_created_on}, aborting")
         raise SystemExit(3)
     except Import.DoesNotExist:
         pass
@@ -149,15 +151,15 @@ def import_words(directory, language_code, stdout, stderr):
                 continue
 
             if word in added_words:
-                print("Duplicated entry:", word)
+                stdout.write("Duplicated entry:", word)
                 continue
 
             if len(word) > 100:
-                print("Too long word:", word)
+                stdout.write("Too long word:", word)
                 continue
 
             if word.endswith("/translations"):
-                print("Subpage:", word)
+                stdout.write("Subpage:", word)
                 continue
 
             WordWithTranslation.objects.create(word=word, language=language)
@@ -166,8 +168,8 @@ def import_words(directory, language_code, stdout, stderr):
             translated_words += 1
 
             if translated_words % 1000 == 0:
-                print("\nImported ", translated_words, "words")
-                print("Total number ", total_words)
+                stdout.write("\nImported ", translated_words, "words")
+                stdout.write("Total number ", total_words)
 
     elapsed_time_minutes = (time.time() - start_time) / 60
 
@@ -176,8 +178,8 @@ def import_words(directory, language_code, stdout, stderr):
                      f"now {translated_words}. Aborting because the number is significantly lower")
         raise SystemExit(3)
 
-    print(f"Import time: {elapsed_time_minutes:.2f} minutes")
-    print(f"Imported words: {translated_words:,} of total number of words: {total_words:,}")
+    stdout.write(f"Import time: {elapsed_time_minutes:.2f} minutes")
+    stdout.write(f"Imported words: {translated_words:,} of total number of words: {total_words:,}")
     Import.objects.create(language=language, file_path=file_information["path"], file_size=file_information["size"],
                           file_created_on=file_information["created_on"], imported_on=timezone.now(),
                           translated_words=translated_words, total_words=total_words)
