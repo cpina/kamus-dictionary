@@ -18,7 +18,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("directory", type=str, help="https:// or local directory")
         parser.add_argument("language_code", type=str, help="E.g. 'en', 'es' or 'ca'")
-        parser.add_argument("-v", "--verbose", action="count", default="0")
+        parser.add_argument("--verbose", action="count", default="0")
 
     def handle(self, *args, **options):
         import_words(options["directory"], options["language_code"], options["verbose"], self.stdout, self.stderr)
@@ -83,7 +83,7 @@ def get_latest_file_information(directory, language_code):
 
 
 @transaction.atomic
-def import_words(directory, language_code, stdout, stderr, verbose):
+def import_words(directory, language_code, verbose, stdout, stderr, ):
     # TODO: use https://docs.djangoproject.com/en/4.1/ref/models/querysets/#django.db.models.query.QuerySet.bulk_create
     # with (maybe!) "ignore_conflicts" would speed up this process.
     # In a laptop from 2013 importing all the 110K English words takes
