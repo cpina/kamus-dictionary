@@ -9,7 +9,7 @@ class Config:
                 "header_translation_table": r"{{trans-top(?P<also>-also)?(?P<see>-see)?\|(?P<parameters>.+)}}",
                 "footer_translation_table": r"{{trans-bottom}}",
                 "tt_before_word": r" ?{{tt?\+?\|",
-                "tt_after_word":  r"\|(?P<translation>.+?)}} ?",
+                "tt_after_word": r"\|(?P<translation>.+?)}} ?",
                 "translation_tables": ["{{trans-top|", "{{see translation subpage|"]
             },
         "ca":
@@ -104,7 +104,6 @@ class WordInformation:
 
             translation = {"translation": translated_word}
 
-
             if m.group("gender"):
                 translation["gender"] = m.group("gender")
 
@@ -133,6 +132,8 @@ class WordInformation:
             main_translation = translation_text
             alternatives_text = ""
 
+        main_translation = cls.remove_square_braces(main_translation)
+
         translation = {**cls._get_information_from_translation(from_lang, main_translation)}
 
         translation["alternatives"] = []
@@ -156,7 +157,9 @@ class WordInformation:
         qualifier_pre = r"({{q(ualifier)?\|(?P<qualifier_pre>.+?)}})?"
         qualifier_post = r"({{q(ualifier)?\|(?P<qualifier_post>.+?)}})?"
         translations = re.finditer(
-            qualifier_pre + Config.get_config(from_lang, "tt_before_word") + to_lang + Config.get_config(from_lang, "tt_after_word") + qualifier_post, table_text)
+            qualifier_pre + Config.get_config(from_lang, "tt_before_word") + to_lang + Config.get_config(from_lang,
+                                                                                                         "tt_after_word") + qualifier_post,
+            table_text)
 
         result = []
 
@@ -252,6 +255,19 @@ class WordInformation:
         result.sort(key=lambda t: "translations" in t and len(t["translations"]) > 0, reverse=True)
 
         return {"senses": result, "sources": sources}
+
+    @classmethod
+    def remove_square_braces(cls, main_translation):
+        # Not an efficient way
+        # Kamus deletes [[ and ]] from "something [[words word]] something"
+        # (but not only [ ] , only with the correct syntax
+        # This is for fun after all, main_translation.sub would not that fun
+
+        while m := re.match(r"(.*)\[\[(.*)\]\](.*)", main_translation):
+            new_translation = m.group(1) + m.group(2) + m.group(3)
+            return cls.remove_square_braces(new_translation)
+
+        return main_translation
 
 
 def get_word_information(from_lang, to_lang, word):

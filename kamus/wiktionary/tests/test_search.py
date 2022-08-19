@@ -113,6 +113,14 @@ class SearchTests(unittest.TestCase):
                 "from_lang": "en",
                 "translations": [{'transcription': 'maji?', 'translation': 'マジ？'}],
                 "text": "{{tt|ja|[[マジ]]？|tr=maji?}}"
+            },
+            {
+                "language_code": "en",
+                "from_lang": "ca",
+                "translations": [{'translation': 'silent something'}],
+                "text": "* {{en}}: {{trad|en|silent [[something]]}}",
+                # Words with [[ something ]] in Wiktionary are a link to the
+                # word (ignored in Kamus)
             }
         ]
 
