@@ -15,7 +15,6 @@ services:
       - DB_HOST=${KAMUS_DB_HOST}
       - DB_PORT=${KAMUS_DB_PORT}
         # TODO: move it outside docker-compose.yml
-      - PYWIKIBOT_NO_USER_CONFIG=1
       - PYWIKIBOT_DIR=/tmp/pywikibot
       - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
       - EMAIL_HOST=${EMAIL_HOST}
