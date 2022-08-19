@@ -6,6 +6,12 @@
 {% block contents %}
     <h1>{{ word }}</h1>
 
+    {% if translations.translated_senses|length == 0 and translations.non_translated_senses|length == 0 %}
+        <p>
+            No translations found for the selected languages and word.
+        </p>
+    {% endif %}
+
     {% for sense in translations.translated_senses %}
         {% if sense.see %}
             {% include "kamus/_see.html" with see=sense.see only %}
@@ -25,11 +31,12 @@
         Non translated senses:
         <ul>
             {% for sense in translations.non_translated_senses %}
-{#                TODO: Refactor with above#}
+                {#                TODO: Refactor with above#}
                 {% if sense.see %}
                     <li>{% include "kamus/_see.html" with see=sense.see only %}</li>
                 {% else %}
-                    <li>{{ sense.sense }}{% include "kamus/_also.html" with also=sense.also base_link_to_word=base_link_to_word only %}</li>
+                    <li>
+                        {{ sense.sense }}{% include "kamus/_also.html" with also=sense.also base_link_to_word=base_link_to_word only %}</li>
                 {% endif %}
             {% endfor %}
         </ul>
