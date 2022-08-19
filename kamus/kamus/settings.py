@@ -25,7 +25,7 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 
 DEBUG = os.environ.get("DEBUG", False) == "1"
 
-ALLOWED_HOSTS = ["kamus.pina.cat", "localhost"]
+ALLOWED_HOSTS = ["kamus.pina.cat", "localhost", "192.168.1.107"]
 
 # For login in admin for example. TODO: check why this is needed in
 # this deployment but in Django 3.X I'm sure that I didn't need it.

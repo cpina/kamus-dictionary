@@ -79,10 +79,8 @@ class SearchForm(forms.Form):
                 Div("from", css_class="col-5 col-lg-2"),
                 Div(HTML('{% include "_arrow.html" %}'), css_class="col-2 col-lg-1 text-center"),
                 Div("to", css_class="col-5 col-lg-2"),
-                Div("word", css_class="col-12 col-lg-7"),
+                Div("word", css_class="col-7 col-lg-5"),
+                Div(HTML('{% include "_submit_button.html" %}'), css_class="col-5 col-lg-2"),
                 css_class="row"
-            ),
-            FormActions(
-                Submit("translate", "Translate")
             )
         )
