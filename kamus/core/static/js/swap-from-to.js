@@ -1,22 +1,45 @@
-$(document).ready(function () {
-    function can_swap() {
-        let from_select = $("#id_from");
-        let to_select = $("#id_to");
+function swap_languages() {
+    let from_select = $("#id_from");
+    let to_select = $("#id_to");
 
-        let from_language = from_select.val();
-        let to_language = to_select.val();
+    let from_language = from_select.val();
+    let to_language = to_select.val();
 
-        let from_languages = $('#id_from option');
+    let from_languages = $('#id_from option');
 
-        let can_swap = false;
-        $(from_languages).each(function () {
-            if (to_language === $(this).val()) {
-                can_swap = true;
-            }
-        });
-        return can_swap;
+    let can_swap = false;
+    $(from_languages).each(function () {
+        if (to_language === $(this).val()) {
+            can_swap = true;
+        }
+    });
+
+    if (can_swap) {
+        from_select.val(to_language);
+        to_select.val(from_language);
     }
+}
 
+function can_swap() {
+    let from_select = $("#id_from");
+    let to_select = $("#id_to");
+
+    let from_language = from_select.val();
+    let to_language = to_select.val();
+
+    let from_languages = $('#id_from option');
+
+    let can_swap = false;
+    $(from_languages).each(function () {
+        if (to_language === $(this).val()) {
+            can_swap = true;
+        }
+    });
+    return can_swap;
+}
+
+
+$(document).ready(function () {
     function enable_disable_swapper() {
         $("#swap").attr('disabled' , !can_swap());
     }
@@ -29,24 +52,6 @@ $(document).ready(function () {
     $("#swap").click(function (e) {
         e.preventDefault();
 
-        let from_select = $("#id_from");
-        let to_select = $("#id_to");
-
-        let from_language = from_select.val();
-        let to_language = to_select.val();
-
-        let from_languages = $('#id_from option');
-
-        let can_swap = false;
-        $(from_languages).each(function () {
-            if (to_language === $(this).val()) {
-                can_swap = true;
-            }
-        });
-
-        if (can_swap) {
-            from_select.val(to_language);
-            to_select.val(from_language);
-        }
+        swap_languages();
     });
 });

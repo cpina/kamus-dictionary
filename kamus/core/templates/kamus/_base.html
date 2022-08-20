@@ -23,11 +23,13 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"
                 integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
+        <script src="{% static "js/shortcuts.js" %}"></script>
+
         {% block contents %}{% endblock %}
 
         <footer class="text-secondary">
             <hr>
-            <a href="{% url 'information' %}">More information</a> | Cookies used to save your from/to language
+            <a href="{% url 'information' %}">More information</a> | <a href="{% url 'shorcuts' %}">Shorcuts</a> | Cookies used to save your from/to language
         </footer>
     </div>
 </main>

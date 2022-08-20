@@ -42,6 +42,8 @@ class Homepage(TemplateView):
 class Information(TemplateView):
     template_name = "kamus/information.html"
 
+class Shorcuts(TemplateView):
+    template_name = "kamus/shortcuts.html"
 
 class Imports(TemplateView):
     template_name = "kamus/imports.html"
