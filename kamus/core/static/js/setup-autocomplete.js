@@ -13,22 +13,26 @@ $(document).ready(function () {
 function handle_key_press_search(event) {
     let target = event["target"];
     if (target["className"] === "select2-search__field" && event["keyCode"] === 13) {
-        let text = target.value
 
-        let data = {
-            id: text,
-            text: text
-        };
+        // TODO: get "Searching…" from select2... in case that it changes
+        if ($("#select2-id_word-results li:first")[0].textContent === "Searching…") {
+            let text = target.value
 
-        let newOption = new Option(data.text, data.id, true, true);
+            let data = {
+                id: text,
+                text: text
+            };
 
-        let word_select = $('#id_word');
+            let newOption = new Option(data.text, data.id, true, true);
 
-        word_select.append(newOption).trigger('change');
+            let word_select = $('#id_word');
 
-        word_select.select2('close');
+            word_select.append(newOption).trigger('change');
 
-        submit_form();
+            word_select.select2('close');
+
+            submit_form();
+        }
     }
 }
 
