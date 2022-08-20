@@ -11,13 +11,15 @@ from wiktionary import FROM_LANGUAGES
 class ModelSelect2Bootstrap5(autocomplete.ModelSelect2):
     @property
     def media(self):
+        # TODO: could make that it keeps the super().media() and adds
+        # the specific ones for Kamus (instead of a full overwrite)
         return forms.Media(
             js=(
                 'admin/js/vendor/select2/select2.full.js',
                 'autocomplete_light/autocomplete_light.js',
                 'autocomplete_light/select2.js',
                 'js/setup-autocomplete.js', # added
-                'js/swap-from-to.js',
+                'js/swap-from-to.js', # added
             ),
             css={
                 'screen': (
