@@ -76,6 +76,8 @@ class SearchForm(forms.Form):
         self.helper = FormHelper()
         self.helper.form_method = "get"
         self.helper.form_action = "translate"
+        self.helper.form_id = "search"
+        self.helper.attrs = {"onsubmit": "search_on_submit()"}
 
         self.helper.layout = Layout(
             Div(
