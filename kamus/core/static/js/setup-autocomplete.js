@@ -1,3 +1,5 @@
+//Any JavaScript related to the autocomplete
+
 $(document).ready(function () {
     $.fn.select2.defaults.set("theme", "bootstrap-5");
 
@@ -8,6 +10,29 @@ $(document).ready(function () {
     $.fn.select2.defaults.set("selectOnClose", true);
 });
 
+function handle_key_press_search(event) {
+    let target = event["target"];
+    if (target["className"] === "select2-search__field" && event["keyCode"] === 13) {
+        let text = target.value
+
+        let data = {
+            id: text,
+            text: text
+        };
+
+        let newOption = new Option(data.text, data.id, true, true);
+
+        let word_select = $('#id_word');
+
+        word_select.append(newOption).trigger('change');
+
+        word_select.select2('close');
+
+        submit_form();
+    }
+}
+
+document.addEventListener('keydown', handle_key_press_search, true);
 
 // Clicking the select2 puts the cursor inside to start typing straight away
 $(document).on('select2:open', (e) => {
@@ -17,8 +42,7 @@ $(document).on('select2:open', (e) => {
     });
 });
 
-// When click on an option: submit the form
-$(document).on('select2:select', function () {
+function submit_form() {
     let form = $('form')[0];
 
     if (form.checkValidity()) {
@@ -26,7 +50,10 @@ $(document).on('select2:select', function () {
     } else {
         form.reportValidity();
     }
-});
+}
+
+// When click on an option: submit the form
+$(document).on('select2:select', submit_form);
 
 // From: https://stackoverflow.com/a/49261426/9294284
 // on focus open the select2 (for example on TAB)
