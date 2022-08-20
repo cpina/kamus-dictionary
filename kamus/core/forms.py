@@ -4,6 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit, HTML
 from django import forms
 from django.core.exceptions import ValidationError
+from django.utils.safestring import mark_safe
 
 from core.models import Language, WordWithTranslation
 from wiktionary import FROM_LANGUAGES
@@ -66,7 +67,7 @@ class SearchForm(forms.Form):
                                                    to_field_name="code",
                                                    )
 
-        self.fields["word"] = CaseSensitiveModelChoiceField(label="Word",
+        self.fields["word"] = CaseSensitiveModelChoiceField(label=mark_safe("<abbr>W</abbr>ord"),
                                                      queryset=WordWithTranslation.objects.all().order_by("word"),
                                                      widget=ModelSelect2Bootstrap5("autocomplete-word-with-translation", forward=["from"],  attrs={"data-minimum-input-length": 2}),
                                                      to_field_name="word",

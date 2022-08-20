@@ -1,0 +1,8 @@
+
+/*
+https://stackoverflow.com/questions/48266239/how-to-display-a-specific-shortcut-key-in-html
+An easy way to write in HTML <abbr>W</abbr>ord and have it underlined
+ */
+abbr {
+  text-decoration: underline;
+}

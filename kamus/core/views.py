@@ -42,7 +42,7 @@ class Homepage(TemplateView):
 class Information(TemplateView):
     template_name = "kamus/information.html"
 
-class Shorcuts(TemplateView):
+class Shortcuts(TemplateView):
     template_name = "kamus/shortcuts.html"
 
 class Imports(TemplateView):
