@@ -3,6 +3,8 @@
 {% block title %}Imports{% endblock %}
 
 {% block contents %}
+    <a href="{% url 'homepage' %}">Back to the main page</a>
+
     <h1>Imports</h1>
     <p>
         The list for the autocomplete word search is imported from Wiktionary's dump files that can be found in the <a
@@ -13,9 +15,9 @@
     </p>
     <p>
         Not all the words in Wiktionary are listed in the autocomplete list. Only words that have a "translation table"
-        are listed. This is to avoid words from another language, or listing words that exist in a language dictionary 
+        are listed. This is to avoid words from another language, or listing words that exist in a language dictionary
         but are, likely, very incomplete. For example, the English Wiktionary has words that Kamus should not display in
-        the autocomplete when translating from English (e.g. "<a href="https://en.wiktionary.org/wiki/taula">taula</a>", 
+        the autocomplete when translating from English (e.g. "<a href="https://en.wiktionary.org/wiki/taula">taula</a>",
         which is in the English Wiktionary as a translation of the word table in Basque, Catalan, Finish and Occitan).
     </p>
 
@@ -46,14 +48,16 @@
         </tbody>
     </table>
     <p>
-        "Words with a translation" are pages on Wiktionary that contain a translation table. This table might be empty 
+        "Words with a translation" are pages on Wiktionary that contain a translation table. This table might be empty
         (rare) or might have a translation to only a few languages. For example, the translations of
-        <a href="https://en.wiktionary.org/wiki/idempotent#Translations">idempotent</a> do not currently contain a 
-        translation for French. The word "idempotent" will be counted in "words with a translation" but a user translating
+        <a href="https://en.wiktionary.org/wiki/idempotent#Translations">idempotent</a> do not currently contain a
+        translation for French. The word "idempotent" will be counted in "words with a translation" but a user
+        translating
         from English to French will not find a translation (but they will find an English definition).
     </p>
     <p>
-        The actual translations are fetched from Wiktionary when they are needed by Kamus. If the content of the Wiktionary
+        The actual translations are fetched from Wiktionary when they are needed by Kamus. If the content of the
+        Wiktionary
         page is updated with a new sense or translation it should be reflected in Kamus straight away.
     </p>
 {% endblock %}

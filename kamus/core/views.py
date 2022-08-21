@@ -39,8 +39,13 @@ class Homepage(TemplateView):
         return context
 
 
-class Information(TemplateView):
+class About(TemplateView):
     template_name = "kamus/about.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_page"] = "about"
+        return context
 
 class Shortcuts(TemplateView):
     template_name = "kamus/shortcuts.html"

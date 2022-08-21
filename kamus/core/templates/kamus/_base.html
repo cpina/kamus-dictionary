@@ -29,7 +29,18 @@
 
         <footer class="text-secondary">
             <hr>
-            <a href="{% url "homepage" %}">Main page</a> | <a href="{% url 'information' %}">About</a> | <a href="{% url 'shortcuts' %}">Shortcuts</a> | <a href="{% url "imports" %}">Imports</a> | Cookies used to save your from/to language
+            {% for link in footer_links %}
+                {% if link.url %}
+                    <a href="{{ link.url }}">{{ link.text }}</a>
+                {% else %}
+                    {{ link.text }}
+                {% endif %}
+                |
+            {% endfor %}
+            Cookies used to save your from/to language
+{#            <a href="{% url "homepage" %}">Main page</a> | <a href="{% url 'information' %}">About</a> | <a#}
+{#                href="{% url 'shortcuts' %}">Shortcuts</a> | <a href="{% url "imports" %}">Imports</a> | Cookies used to#}
+{#            save your from/to language#}
         </footer>
     </div>
 </main>
