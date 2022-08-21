@@ -23,11 +23,16 @@ class Command(BaseCommand):
         import_words(options["directory"], options["language_code"], options["verbosity"], self.stdout, self.stderr)
 
 
-def open_wiktionary(file_path):
+def open_wiktionary(file_path, verbosity):
     if not file_path.startswith("https://"):
         file_path = f"file://{file_path}"
 
-    result = subprocess.Popen(["bash", "-c", f"curl {file_path} | bzcat"], stdout=subprocess.PIPE)
+    if verbosity > 1:
+        silent = ""
+    else:
+        silent = "--silent"
+
+    result = subprocess.Popen(["bash", "-c", f"curl {silent} {file_path} | bzcat"], stdout=subprocess.PIPE)
     return result.stdout
 
 
@@ -108,7 +113,7 @@ def import_words(directory, language_code, verbosity, stdout, stderr, ):
     except Import.DoesNotExist:
         pass
 
-    file_with_words = open_wiktionary(file_information["path"])
+    file_with_words = open_wiktionary(file_information["path"], verbosity)
 
     words_for_language = WordWithTranslation.objects.all().filter(language=language)
     translated_words_before = words_for_language.count()
