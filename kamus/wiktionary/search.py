@@ -250,6 +250,9 @@ class WordInformation:
             if len(translations) > 0:
                 r["translations"] = translations
 
+            if r["sense"] == "" and "translations" not in r:
+                continue
+
             result.append(r)
 
         result.sort(key=lambda t: "translations" in t and len(t["translations"]) > 0, reverse=True)
