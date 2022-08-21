@@ -36,6 +36,17 @@ function handle_key_press_search(event) {
     }
 }
 
+function submit_form() {
+    let form = $('form')[0];
+
+    if (form.checkValidity()) {
+        form.submit();
+    } else {
+        form.reportValidity();
+    }
+
+}
+
 document.addEventListener('keydown', handle_key_press_search, true);
 
 // Clicking the select2 puts the cursor inside to start typing straight away
@@ -44,17 +55,6 @@ $(document).on('select2:open', (e) => {
     $(".select2-search__field[aria-controls='select2-" + selectId + "-results']").each(function (key, value,) {
         value.focus();
     });
-});
-
-// When click on an option: submit the form
-$(document).on('select2:select', function () {
-    let form = $('form')[0];
-
-    if (form.checkValidity()) {
-        form.submit();
-    } else {
-        form.reportValidity();
-    }
 });
 
 // When click on an option: submit the form
