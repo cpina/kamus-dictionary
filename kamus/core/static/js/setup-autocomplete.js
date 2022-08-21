@@ -31,7 +31,12 @@ function handle_key_press_search(event) {
 
             word_select.select2('close');
 
-            submit_form();
+            if (submit_form()) {
+                // TODO: if using HTMX this will cause problems when loading
+                // the subpage. Now it is ok because the form submits and a
+                // new page appears.
+                word_select.select2("destroy");
+            }
         }
     }
 }
@@ -41,9 +46,11 @@ function submit_form() {
 
     if (form.checkValidity()) {
         form.submit();
+        return true;
     } else {
         form.reportValidity();
     }
+    return false;
 
 }
 
