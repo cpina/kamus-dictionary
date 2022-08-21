@@ -104,7 +104,8 @@ def import_words(directory, language_code, verbosity, stdout, stderr, ):
         stdout.write(f"Will start to import: {file_information}")
 
     try:
-        imported = Import.objects.get(file_path=file_information["path"],
+        imported = Import.objects.get(language=language,
+                                      file_path=file_information["path"],
                                       file_created_on=file_information["created_on"],
                                       file_size=file_information["size"])
         if verbosity > 1:
