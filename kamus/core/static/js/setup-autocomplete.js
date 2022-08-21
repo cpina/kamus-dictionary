@@ -46,7 +46,8 @@ $(document).on('select2:open', (e) => {
     });
 });
 
-function submit_form() {
+// When click on an option: submit the form
+$(document).on('select2:select', function () {
     let form = $('form')[0];
 
     if (form.checkValidity()) {
