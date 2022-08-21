@@ -113,6 +113,8 @@ def import_words(directory, language_code, verbosity, stdout, stderr, ):
     except Import.DoesNotExist:
         pass
 
+    stdout.write(f"Start new import for: {language}")
+
     file_with_words = open_wiktionary(file_information["path"], verbosity)
 
     words_for_language = WordWithTranslation.objects.all().filter(language=language)
