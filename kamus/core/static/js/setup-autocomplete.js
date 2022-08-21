@@ -55,7 +55,7 @@ $(document).on('select2:select', function () {
     } else {
         form.reportValidity();
     }
-}
+});
 
 // When click on an option: submit the form
 $(document).on('select2:select', submit_form);
