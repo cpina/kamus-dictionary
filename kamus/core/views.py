@@ -54,7 +54,7 @@ class Imports(TemplateView):
         imports = []
         for language_dict in Import.objects.values("language__name").distinct():
             language_name = language_dict["language__name"]
-            latest_import = Import.objects.filter(language__name=language_name).order_by("imported_on").first()
+            latest_import = Import.objects.filter(language__name=language_name).order_by("-imported_on").first()
 
             imports.append({"language_name": language_name,
                             "file_created_on": latest_import.file_created_on,
