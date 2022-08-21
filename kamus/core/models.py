@@ -27,3 +27,6 @@ class Import(models.Model):
     imported_on = models.DateTimeField()
     translated_words = models.IntegerField()
     total_words = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.language}-{self.file_created_on}"
