@@ -152,15 +152,15 @@ def import_words(directory, language_code, verbosity, stdout, stderr, ):
                 continue
 
             if word in added_words:
-                stdout.write("Duplicated entry:", word)
+                stdout.write(f"Duplicated entry: {word}")
                 continue
 
             if len(word) > 100:
-                stdout.write("Too long word:", word)
+                stdout.write(f"Too long word: {word}")
                 continue
 
             if word.endswith("/translations"):
-                stdout.write("Subpage:", word)
+                stdout.write(f"Subpage: {word}")
                 continue
 
             WordWithTranslation.objects.create(word=word, language=language)
@@ -169,8 +169,8 @@ def import_words(directory, language_code, verbosity, stdout, stderr, ):
             translated_words += 1
 
             if translated_words % 1000 == 0:
-                stdout.write("\nImported ", translated_words, "words")
-                stdout.write("Total number ", total_words)
+                stdout.write(f"\nImported {translated_words} words")
+                stdout.write(f"Total number {total_words}")
 
     elapsed_time_minutes = (time.time() - start_time) / 60
 
