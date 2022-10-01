@@ -89,7 +89,10 @@ class Translate(View):
         is_valid = search_form.is_valid()
 
         if is_valid == False:
-            messages.error(self.request, "Invalid parameters - please try again or get in touch")
+            if "to" in search_form.errors:
+                messages.error(self.request, f'Language "{search_form.data["to"]}" is not available or supported')
+            else:
+                messages.error(self.request, "Invalid parameters - please try again or get in touch")
             return redirect("homepage")
 
         if isinstance(search_form.cleaned_data["word"], WordWithTranslation):
@@ -107,7 +110,11 @@ class Translate(View):
 
         context = {}
         context["word"] = word
-        context["translations"] = get_word_information(from_language, to_language, word)
+        try:
+            context["translations"] = get_word_information(from_language, to_language, word)
+        except NotImplementedError:
+            messages.error(self.request, f'The language "{from_language}" is not implemented in Kamus')
+            return redirect(reverse("homepage"))
 
         url_parameters_without_word = self.request.GET.copy()
         del url_parameters_without_word["word"]
