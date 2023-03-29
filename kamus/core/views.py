@@ -90,7 +90,8 @@ class Translate(View):
 
         if is_valid == False:
             if "to" in search_form.errors:
-                messages.error(self.request, f'Language "{search_form.data["to"]}" is not available or supported')
+                if "to" in search_form.data:
+                    messages.error(self.request, f'Language "{search_form.data["to"]}" is not available or supported')
             else:
                 messages.error(self.request, "Invalid parameters - please try again or get in touch")
             return redirect("homepage")
