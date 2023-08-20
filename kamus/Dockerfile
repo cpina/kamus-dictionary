@@ -4,12 +4,13 @@ RUN mkdir /code
 
 RUN apt-get -y update && apt-get -y dist-upgrade && \
 	apt-get install --no-install-recommends --yes \
-	python3-pip \
+	python3 python3-venv \
 	libmariadb-dev libpython3-dev gcc \
 	mariadb-client \
 	curl bzip2
 COPY requirements.txt /code/
-RUN pip3 install -r /code/requirements.txt
+RUN python3 -m venv /code/venv
+RUN /code/venv/bin/pip3 install -r /code/requirements.txt
 RUN apt-get purge -y libmariadbclient-dev libmariadb-dev-compat \
 	gcc libpython3-dev && \
    apt-get autoremove -y && \
