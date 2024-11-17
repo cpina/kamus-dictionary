@@ -11,7 +11,7 @@ else
 	docker_compose_options="--no-cache --pull"
 fi
 
-docker-compose build $docker_compose_options && (docker-compose down ; docker-compose up -d)
+time bash -c "docker-compose build $docker_compose_options && (docker-compose down ; docker-compose up -d)"
 
 echo
 echo "See logs:"
