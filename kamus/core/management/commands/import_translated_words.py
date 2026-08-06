@@ -10,6 +10,7 @@ from django.db import transaction
 from lxml import etree
 
 from core.models import Language, WordWithTranslation, Import
+from wiktionary import FROM_LANGUAGES
 from wiktionary.search import Config
 from django.utils import timezone
 
@@ -97,7 +98,20 @@ def import_words(directory, language_code, verbosity, stdout, stderr, ):
     # or could be checked in memory before inserting it?)
     # Example file: https://dumps.wikimedia.org/cawiktionary/latest/cawiktionary-latest-pages-articles.xml.bz2
 
-    language = Language.objects.get(code=language_code)
+    if language_code not in FROM_LANGUAGES:
+        stderr.write(
+            f"Unknown language code '{language_code}': add it to "
+            f"wiktionary.FROM_LANGUAGES (and wiktionary.search.Config.CONFIG) first.")
+        raise SystemExit(1)
+
+    # Languages aren't seeded via fixture/migration, so create the Language
+    # row on first import instead of requiring a manual DB step.
+    language, language_created = Language.objects.get_or_create(
+        code=language_code, defaults={"name": FROM_LANGUAGES[language_code]})
+
+    if language_created and verbosity > 1:
+        stdout.write(f"Created new Language row for '{language_code}' ({language.name})")
+
     file_information = get_latest_file_information(directory, language_code)
 
     if verbosity > 1:
