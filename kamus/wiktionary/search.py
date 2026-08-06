@@ -27,6 +27,14 @@ class Config:
                 "translation_tables": ["{{trad-arriba"],
                 "tt_before_word": r" ?{{tt?\+?\|",
             },
+        "id":
+            {
+                "header_translation_table": r"{{t-atas(\|(?P<parameters>.+))?}}",
+                "footer_translation_table": r"{{t-bawah}}",
+                "tt_before_word": r" ?{{t(-simple)?\|",
+                "tt_after_word": r"\|(?P<translation>.+?)}} ?",
+                "translation_tables": ["{{t-atas"],
+            },
     }
 
     @classmethod
@@ -227,12 +235,13 @@ class WordInformation:
                 # TODO: log, Wiktionary page broken
                 continue
 
-            parameters = trans_top.group("parameters").split("|")
+            parameters_raw = trans_top.group("parameters")
+            parameters = parameters_raw.split("|") if parameters_raw else []
 
             # some items had an id=XXX that we are not interested in
             parameters = list(filter(lambda x: not x.startswith("id="), parameters))
 
-            main_sense = parameters[0].strip()
+            main_sense = parameters[0].strip() if parameters else ""
 
             also = {}
             if len(parameters) > 1:

@@ -15,6 +15,19 @@ class SearchTests(unittest.TestCase):
                                                    {"translation": "hop"}]}],
             },
             {
+                "language_code": "nl",
+                "from_lang": "id",
+                "text": (
+                    "{{t-atas}}\n"
+                    "* bahasa Anuki: {{t|aui|rarima}}\n"
+                    "* bahasa Belanda: {{t-simple|nl|water|n|langname=Dutch}}\n"
+                    "{{trans-mid}}\n"
+                    "* bahasa Indonesia: {{t-simple|id|air|langname=Indonesian}}\n"
+                    "{{t-bawah}}"
+                ),
+                "translations": [{"translation": "water", "gender": "n"}],
+            },
+            {
                 "language_code": "ca",
                 "from_lang": "en",
                 "text": "* Basque: {{tt+|eu|kaixo}}\n* Catalan: {{tt+|ca|hola}}",
